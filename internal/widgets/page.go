@@ -1,0 +1,57 @@
+package widgets
+
+import (
+	"github.com/rivo/tview"
+)
+
+type Pages struct {
+	*tview.Pages
+	ActivePage 		string
+	History 		[]string
+}
+
+func NewPages() *Pages {
+	p := &Pages{
+		Pages:	tview.NewPages(),
+	}
+	return p
+}
+
+func (p *Pages) GetActivePage() string {
+	return p.ActivePage
+}
+
+func (p *Pages) AddPageX(name string, item tview.Primitive, resize, visible bool) {
+	if visible {
+		p.ActivePage = name
+	}
+	p.AddPage(name, item, resize, visible)
+}
+
+func (p *Pages) AddHistory(name string) {
+	if name != "" {
+		p.AddHistory(p.ActivePage)
+	}
+	p.SwitchToPage(name)
+	p.ActivePage = name
+}
+
+func (p *Pages) ShowPageX(name string) {
+	p.AddHistory(name)
+	p.ShowPage(name)
+	p.ActivePage = name
+}
+
+func (p *Pages) GoBack() {
+	if len(p.History) > 0 {
+		PrevPage := p.HistoryPop()
+		p.OpenPageX(PrevPage, false)
+	}
+}
+
+func (p *Pages) HistoryPop() string {
+	LastIndex := len(p.History) - 1
+	PageName := p.History[LastIndex]
+	p.History := p.History[:LastIndex]
+	return PageName
+}
