@@ -76,7 +76,7 @@ func (n *Nomad) AllocationTask(params *models.NomadParams, allocationId string) 
 				DiskMB:		*task.Resources.DiskMB,
 			},
 			RestartPolicy:	models.TaskRestartPolicy{
-				Interval:	*tsak.RestartPolicy.Interval,
+				Interval:	*task.RestartPolicy.Interval,
 				Attempts:	*task.RestartPolicy.Attempts,
 				Delay:		*task.RestartPolicy.Attempts,
 				Mode:		*task.RestartPolicy.Mode,
@@ -119,7 +119,7 @@ func (n *Nomad) AllocationEvents(allocation *api.AllocationListStub) ([]models.E
 }
 
 func (n *Nomad) AllocationStats(params *models.NomadParams, allocation *api.Allocation) (models.AllocationStats, error) {
-	Data, Err := n.AllocationClient.Stats(allocation, &api/QueryOptions{
+	Data, Err := n.AllocationClient.Stats(allocation, &api.QueryOptions{
 		Namespace:	params.Namespace,
 		Region:		params.Region,
 	})

@@ -10,7 +10,7 @@ import (
 
 var TitleVersions = "versions"
 
-type Versoins struct {
+type Versions struct {
 	*widgets.Table
 	Title		string
 	Headers		[]string
