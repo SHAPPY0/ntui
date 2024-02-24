@@ -11,8 +11,8 @@ type Layout struct {
 	*views.App
 	Pages			*tview.Pages
 	MainLayout		*tview.Flex
-	Splash			*tview.Splash
-	Header			*tview.Header
+	Splash			*views.Splash
+	Header			*views.Header
 	Body			*widgets.Pages
 	Footer			*views.Footer
 }

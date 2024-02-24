@@ -45,7 +45,7 @@ func NewApp(config *Config) (*App, error) {
 	return a, nil
 }
 
-func (a *App) Init() error {
+func (app *App) Init() error {
 	app.Primitives = PrimitivesX{
 		Regions:		NewRegions(app),
 		Namespaces:		NewNamespaces(app),
