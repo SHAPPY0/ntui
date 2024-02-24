@@ -62,7 +62,7 @@ func GetValue(c *Config, key string) string {
 }
 
 func (c *Config) Load() (*Config, error) {
-	ConfigPath := "/home/ipp-dev/.ntui/confnig.json"
+	ConfigPath := "/home/ipp-dev/.ntui/config.json"
 	Config := c
 	ConfigJson, Err := ioutil.ReadFile(ConfigPath)
 	if Err != nil {
