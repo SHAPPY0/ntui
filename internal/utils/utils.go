@@ -11,7 +11,7 @@ func IntToStr(value int) string {
 }
 
 func GetID(id string) string {
-	if id != nil {
+	if id != "" {
 		idParts := strings.Split(id, "-")
 		return idParts[0]
 	} else {

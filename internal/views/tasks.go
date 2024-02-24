@@ -88,13 +88,13 @@ func (t *Tasks) SetInfoView() {
 	t.InfoView = widgets.NewFlex()
 	t.InfoView.SetBorder(false)
 	//Top Left
-	InfoLeftTable = widgets.NewMapView()
+	InfoLeftTable := widgets.NewMapView()
 	InfoLeftTable.SetMapKeys(TaskLeftInfoKeys)
 	InfoLeftTable.SetMapValues(TaskLeftInfoValues)
 	InfoLeftTable.DrawMapView()
 
 	//Top Right
-	InfoRightTable = widgets.NewMapView()
+	InfoRightTable := widgets.NewMapView()
 	InfoRightTable.SetMapKeys(TaskRightInfoKeys)
 	InfoRightTable.SetMapValues(TaskRightInfoValues)
 	InfoRightTable.DrawMapView()
@@ -112,8 +112,8 @@ func (t *Tasks) SetUsageView() {
 	t.DetailsView.AddItemX(t.UsageView, 0, 1, false)
 }
 
-func (t *Tasks) EventsView(events []mdoels.Events) {
-	t.EventsTable.Headers = []strig{"time", "type", "description"}
+func (t *Tasks) EventsView(events []models.Events) {
+	t.EventsTable.Headers = []string{"time", "type", "description"}
 	t.EventsTable.SetBorder(false)
 	t.EventsTable.ClearTable()
 	t.EventsTable.DrawHeader()

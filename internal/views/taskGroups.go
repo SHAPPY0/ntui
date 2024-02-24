@@ -35,7 +35,7 @@ func (tg *TaskGroups) SetOnSelectFn(fn func(int, int)) {
 	tg.Table.SetOnSelectFn(fn)
 }
 
-func (tg *TaskGroups) SetOnTabPressFn(fn func(int, int)) {
+func (tg *TaskGroups) SetOnTabPressFn(fn func()) {
 	tg.Table.SetOnTabPressFn(fn)
 }
 

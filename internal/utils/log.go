@@ -18,7 +18,7 @@ func SetLogLevels() {
 	zerolog.SetGlobalLevel(zerolog.ErrorLevel)
 }
 
-func log(kind, message string) {
+func Log(kind, message string) {
 	switch kind {
 	case Info:
 		log.Info().Msg(message)

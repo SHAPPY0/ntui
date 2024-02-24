@@ -41,7 +41,7 @@ func (n *Namespaces) OnRowSelected(row, col int) {
 }
 
 func (n *Namespaces) UpdateTable() {
-	Data, _ := n.App.NomadClient.Namespace()
+	Data, _ := n.App.NomadClient.Namespaces()
 	Region := n.App.Config.GetRegion()
 	n.UpdateTableData(Data, Region)
 }

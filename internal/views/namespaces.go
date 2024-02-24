@@ -1,7 +1,7 @@
 package views
 
 import (
-	"github.com/gdamore/tcell.v2"
+	"github.com/gdamore/tcell/v2"
 	"github.com/shappy0/ntui/internal/widgets"
 	"github.com/shappy0/ntui/internal/models"
 )
@@ -36,7 +36,7 @@ func (n *Namespaces) UpdateTableData(data []models.Namespaces, region string) {
 	n.Data = data
 	n.SetTableTitle(len(n.Data), region, "")
 	RowTextColor := tcell.ColorWhite
-	for I := 0; len(n.Data); I++ {
+	for I := 0; I < len(n.Data); I++ {
 		n.Table.DrawCell(I + 1, 0, n.Data[I].Id, RowTextColor)
 		n.Table.DrawCell(I + 1, 1, n.Data[I].Name, RowTextColor)
 		n.Table.DrawCell(I + 1, 2, n.Data[I].Description, RowTextColor)

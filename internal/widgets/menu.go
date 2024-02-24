@@ -23,12 +23,12 @@ var (
 	}
 	UpArrowMenu = Item{
 		Name:		"up_arrow",
-		Icon:		"enter",
+		Icon:		"↑",
 		Description: "Move UP",
 	}
 	DownArrowMenu = Item{
 		Name:		"down_arrow",
-		Icon:		"|",
+		Icon:		"↓",
 		Description: "Move Down",
 	}
 	EscMenu = Item{
@@ -63,7 +63,7 @@ var (
 	}
 	RevertMenu = Item{
 		Name:		"revert_version",
-		Icon:		"ctrl+v",
+		Icon:		"ctrl+r",
 		Description: "Revert Version",
 	}
 )
@@ -71,8 +71,9 @@ var (
 func NewMenu() *Menu {
 	m := &Menu{
 		MapView:	NewMapView(),
-		Items:		make([]Item, 0)
+		Items:		make([]Item, 0),
 	}
+	return m
 }
 
 func MenuExist(menu *Menu, name string) bool {
@@ -89,15 +90,15 @@ func (m *Menu) Add(menu Item, refresh bool) *Menu {
 	if MenuExist(m, menu.Name) {
 		return m
 	}
-	m.Items = append(m.Items, Menu)
-	if Refresh {
+	m.Items = append(m.Items, menu)
+	if refresh {
 		m.Render()
 	}
 	return m
 }
 
 func (m *Menu) Render() {
-	m.Clean()
+	m.Clear()
 	for _, Menu := range m.Items {
 		Key := fmt.Sprintf("[%s]<%s>", "orange", Menu.Icon)
 		Value := fmt.Sprintf("[%s]%s\n", "DimGray", Menu.Description)

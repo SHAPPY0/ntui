@@ -23,7 +23,7 @@ func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 	Result := make([]models.Jobs, 0)
 	Data, _, Err := n.JobClient.List(&api.QueryOptions{
 		Region: params.Region,
-		Namespace: params.Namesapce,
+		Namespace: params.Namespace,
 	})
 	if Err != nil {
 		fmt.Println("Err", Err)
@@ -32,7 +32,7 @@ func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 	for Index, Job := range Data {
 		_ = Index
 		Summary := models.Summary{
-			Total:	len(Job.JobSummary.Summary)
+			Total:	len(Job.JobSummary.Summary),
 		}
 		for _, JS := range Job.JobSummary.Summary{
 			if JS.Running > 0 {
@@ -42,7 +42,7 @@ func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 		var J models.Jobs
 		J.ID 			=	Job.ID
 		J.Name			=	Job.Name
-		J.Namespace		=	Job.JobSummary.Namesapce
+		J.Namespace		=	Job.JobSummary.Namespace
 		J.Type			=	Job.Type
 		J.Status		=	Job.Status
 		J.StatusDescription = Job.StatusDescription
@@ -88,12 +88,12 @@ func (n *Nomad) TaskGroups(jobId, region, namespace string) ([]models.TaskGroups
 //TODO: Implement Later, Submission(Definitions) required current job version
 func (n *Nomad) Submission() {}
 
-func (n *Nomad) Versions(jobId string, params *models.NomadParams) ([]models.JobVersions, []models.JobVersionDiff, error) {
+func (n *Nomad) Versions(jobId string, params *models.NomadParams) ([]models.JobVersion, []models.JobVersionDiff, error) {
 	JobVersions := make([]models.JobVersion, 0)
 	JobVersionDiff := make([]models.JobVersionDiff, 0)
-	Versions, Diff, _, Err := n.JobClient.Versions(jobId, true, &api.QueryOptions {
+	Versions, Diffs, _, Err := n.JobClient.Versions(jobId, true, &api.QueryOptions {
 		Region:		params.Region,
-		Namespace:	params.Namesapce,
+		Namespace:	params.Namespace,
 	})
 	if Err != nil {
 		return JobVersions, JobVersionDiff, Err

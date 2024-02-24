@@ -9,12 +9,12 @@ import (
 
 type Layout struct {
 	*views.App
-	Pages:			*tview.Pages
-	MainLayout:		*tview.Flex
-	Splash:			*tview.Splash
-	Header:			*tview.Header
-	Body:			*widgets.Pages
-	Footer:			*views.Footer
+	Pages			*tview.Pages
+	MainLayout		*tview.Flex
+	Splash			*tview.Splash
+	Header			*tview.Header
+	Body			*widgets.Pages
+	Footer			*views.Footer
 }
 
 func NewLayout() *Layout {

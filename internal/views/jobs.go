@@ -10,6 +10,7 @@ var TitleJobs = "jobs"
 
 type Jobs struct {
 	*widgets.Table
+	Title			string
 	Headers 		[]string
 	Data 			[]models.Jobs
 }
@@ -17,6 +18,7 @@ type Jobs struct {
 func NewJobs() *Jobs {
 	j := &Jobs{
 		Table: 		widgets.NewTable(TitleJobs),
+		Title:		TitleJobs,
 		Headers:	[]string{"name", "status", "type", "groups", "priority"},
 	}
 
@@ -25,12 +27,16 @@ func NewJobs() *Jobs {
 	return j
 }
 
+func (j *Jobs) GetTitle() string {
+	return j.Title
+}
+
 func (j *Jobs) SetOnSelectFn(fn func(int, int)) {
 	j.Table.SetOnSelectFn(fn)
 }
 
-func (j *Jobs) SetOnTabPress(fn func()) {
-	j.Table.SetOnTabPress(fn)
+func (j *Jobs) SetOnTabPressFn(fn func()) {
+	j.Table.SetOnTabPressFn(fn)
 }
 
 func (j *Jobs) UpdateTableData(params *models.NomadParams, data []models.Jobs) {

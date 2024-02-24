@@ -37,7 +37,7 @@ type Jobs struct {
 	Type 				string
 	Status 				string
 	StatusDescription 	string
-	StatuSummary 		Summary
+	StatusSummary 		Summary
 	Priority			int
 	SubmitTime			time.Time
 }
@@ -70,6 +70,8 @@ type Allocations struct {
 	Modified 		time.Time
 	Status			string
 	Version			int
+	Client 			string
+	Volumn 			string
 	Cpu 			int
 	CpuUsage 		int
 	Memory 			int
@@ -81,14 +83,14 @@ type Allocations struct {
 type TaskConfig struct {
 	Image 			string
 	MemoryHardLimit int
-	Volumns 		[]string
+	Volumes 		[]string
 }
 
 type TaskResource struct {
 	CPU 			int
 	CPUUsage		int
 	Cores			int
-	MemoryDB		int
+	MemoryMB		int
 	MemoryUsage		int
 	MemoryMaxMB		int
 	DiskMB			int
@@ -104,8 +106,8 @@ type TaskRestartPolicy struct {
 type Tasks struct {
 	Name 			string
 	Driver 			string
-	Config 			map[string]string
-	Env 			map[string][string]
+	Config 			map[string]interface{}
+	Env 			map[string]string
 	Resources 		TaskResource
 	RestartPolicy	TaskRestartPolicy
 }
@@ -138,8 +140,8 @@ type AllocCpuStats struct {
 	SystemMode 		float64
 	UserMode 		float64
 	TotalTicks 		float64
-	ThrottlePeriods	uint64
-	ThrottleTime 	uint64
+	ThrottledPeriods	uint64
+	ThrottledTime 	uint64
 	Percent			float64
 }
 
@@ -178,8 +180,8 @@ type TaskGroupDiff struct {
 	Name 			string
 	Fields			[]*FieldDiff
 	Objects			[]*ObjectDiff
-	Tasks			[]*TaskGroupDiff
-	Updates			map[string]string
+	Tasks			[]*TaskDiff
+	Updates			map[string]uint64
 }
 
 type TaskDiff struct {

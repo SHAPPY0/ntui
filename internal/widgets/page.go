@@ -30,6 +30,12 @@ func (p *Pages) AddPageX(name string, item tview.Primitive, resize, visible bool
 
 func (p *Pages) AddHistory(name string) {
 	if name != "" {
+		p.History = append(p.History, name)
+	}
+}
+
+func (p *Pages) OpenPageX(name string, addHistory bool) {
+	if addHistory && p.ActivePage != "" {
 		p.AddHistory(p.ActivePage)
 	}
 	p.SwitchToPage(name)
@@ -52,6 +58,6 @@ func (p *Pages) GoBack() {
 func (p *Pages) HistoryPop() string {
 	LastIndex := len(p.History) - 1
 	PageName := p.History[LastIndex]
-	p.History := p.History[:LastIndex]
+	p.History = p.History[:LastIndex]
 	return PageName
 }

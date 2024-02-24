@@ -19,7 +19,7 @@ func NewFlex() *Flex {
 }
 
 func (f *Flex) AddItemX(primitive tview.Primitive, fixedSize, proportion int, focus bool) {
-	f.AddItemX(primitive, fixedSize, proportion, focus)
+	f.AddItem(primitive, fixedSize, proportion, focus)
 }
 
 func (f *Flex) SetTitleX(title, a string) {

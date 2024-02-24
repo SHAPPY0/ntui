@@ -43,7 +43,7 @@ func (tg *TaskGroups) OnRowSelected(row, col int) {
 		tg.App.Layout.QueueUpdateDraw(func() {
 			tg.SelectedValue["jobId"] = tg.JobId
 			tg.App.Primitives.Allocations.Render(tg.SelectedValue)
-			tg.Aapp.Layout.OpenPage("allocations", true)
+			tg.App.Layout.OpenPage("allocations", true)
 		})
 	}()
 }
@@ -53,7 +53,7 @@ func (tg *TaskGroups) UpdateTable(jobId string) {
 	Namespace := tg.App.Config.GetNamespace()
 	tg.JobId = jobId
 	Data, _ := tg.App.NomadClient.TaskGroups(jobId, Region, Namespace)
-	tg.UpdateTableData(jobId, Regions, Namespace, Data)
+	tg.UpdateTableData(jobId, Region, Namespace, Data)
 }
 
 func (tg *TaskGroups) Refresher() {

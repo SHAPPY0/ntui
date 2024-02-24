@@ -34,7 +34,7 @@ func (a *Allocations) SetOnSelectFn(fn func(int, int)) {
 	a.Table.SetOnSelectFn(fn)
 }
 
-func (a *Allocations) SetOnTabPressFn(fn func(int, int)) {
+func (a *Allocations) SetOnTabPressFn(fn func()) {
 	a.Table.SetOnTabPressFn(fn)
 }
 
@@ -51,7 +51,7 @@ func (a *Allocations) UpdateTableData(data []models.Allocations) {
 		a.Table.DrawCell(I + 1, 0, utils.GetID(a.Data[I].ID), CellColor)
 		a.Table.DrawCell(I + 1, 1, a.Data[I].Name, CellColor)
 		a.Table.DrawCell(I + 1, 2, Status, CellColor)
-		a.Table.DrawCell(I + 1, 3, utils.IntToStr(a.Data[I].version), CellColor)
+		a.Table.DrawCell(I + 1, 3, utils.IntToStr(a.Data[I].Version), CellColor)
 		a.Table.DrawCell(I + 1, 4, utils.DateTimeToStr(a.Data[I].Created), CellColor)
 		a.Table.DrawCell(I + 1, 5, utils.DateTimeToStr(a.Data[I].Modified), CellColor)
 		a.Table.DrawCell(I + 1, 6, utils.GetID(a.Data[I].Client), CellColor)

@@ -16,7 +16,7 @@ type VersionDiff struct {
 func NewVersionDiff() *VersionDiff {
 	v := &VersionDiff{
 		TextView:	widgets.NewTextView(TitleVersionDiff),
-		Title:		TitleTaskGroups,
+		Title:		TitleVersionDiff,
 	}
 	v.SetDynamicColors(true)
 	return v

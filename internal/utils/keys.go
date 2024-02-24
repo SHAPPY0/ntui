@@ -18,7 +18,7 @@ var (
 		KeyDescription: "Exit Ntui Application",
 	}
 	NtuiEscKey = NtuiKey{
-		Key:			tcell.KeyEcs,
+		Key:			tcell.KeyEsc,
 		KeyLabel:		"Backspace",
 		KeyDescription: "To go back to previous screen",
 	}
@@ -27,7 +27,7 @@ var (
 		KeyLabel:		"Tab Key",
 		KeyDescription: "To switch focus",
 	}
-	NtuiCtrRKey = NtuiKey{
+	NtuiCtrlRKey = NtuiKey{
 		Key:			tcell.KeyCtrlR,
 		KeyLabel:		"Ctrl + r",
 		KeyDescription: "To switch to Region Page",

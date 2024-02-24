@@ -37,6 +37,6 @@ func Init(cmd *cobra.Command, args []string) error {
 	if Err := App.Init(); Err != nil {
 		return Err
 	}
-	App.Runx()
+	App.RunX()
 	return nil
 }

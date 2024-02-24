@@ -1,9 +1,9 @@
 package utils
 
-import {
+import (
 	"fmt"
 	"github.com/gdamore/tcell/v2"
-}
+)
 
 const (
 	ColorWhite	=	tcell.ColorWhite
@@ -14,7 +14,7 @@ const (
 
 func ColorizeStatusCell(status string) (tcell.Color, string) {
 	CellColor := tcell.ColorWhite
-	Status = ToCapitalize(status)
+	Status := ToCapitalize(status)
 	if Status == "Dead" {
 		CellColor = tcell.ColorGray
 	} else if Status == "Failed" {
@@ -32,6 +32,6 @@ func ColorizeStatusCell(status string) (tcell.Color, string) {
 }
 
 func SetCellTextColor(text, color string) string {
-	Text = fmt.Sprintf("[%s]%s", color, text)
+	Text := fmt.Sprintf("[%s]%s", color, text)
 	return Text
 }

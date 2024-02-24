@@ -8,7 +8,7 @@ import (
 
 type TextView struct {
 	*tview.TextView
-	Title:		string
+	Title		string
 }
 
 func NewTextView(title string) *TextView {

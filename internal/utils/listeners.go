@@ -15,9 +15,9 @@ type Listener struct {
 func NewListener(fn func()) *Listener {
 	l := &Listener{
 		StopChan:		make(chan bool),
-		Function: 		fn.
+		Function: 		fn,
 	}
-	return &l
+	return l
 }
 
 func (l *Listener) Listen() {
@@ -26,7 +26,7 @@ func (l *Listener) Listen() {
 	go func() {
 		for {
 			select {
-			case Tick := <-l.Ticker.c:
+			case Tick := <-l.Ticker.C:
 				_ = Tick
 				l.Function()
 			case Stop := <-l.StopChan:
@@ -50,6 +50,6 @@ func DeactivateListeners() {
 
 func (l *Listener) Stop() {
 	if l.Ticker != nil {
-		k.StopChan <-true
+		l.StopChan <-true
 	}
 }

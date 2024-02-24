@@ -7,9 +7,9 @@ import (
 )
 
 type Allocations struct {
-	*view.Allocations
+	*views.Allocations
 	App				*App
-	Listner			*utils.Listner
+	Listener		*utils.Listener
 	SelectedValue	map[string]string
 	TaskGroup		map[string]string
 	Data			[]models.Allocations
@@ -22,7 +22,7 @@ func NewAllocations(app *App) *Allocations {
 	}
 	a.App.Layout.Body.AddPageX(a.GetTitle(), a, true, false)
 	a.SetOnSelectFn(a.OnRowSelected)
-	a.Listner = utils.NewListner(a.Refresher)
+	a.Listener = utils.NewListener(a.Refresher)
 	a.SetFocusFunc(a.OnFocus)
 	a.SetBlurFunc(a.OnBlur)
 	return a
@@ -34,7 +34,7 @@ func (a *Allocations) OnRowSelected(row, col int) {
 		a.App.Layout.QueueUpdateDraw(func() {
 			a.App.Layout.OpenPage("tasks", true)
 		})
-	}
+	}()
 }
 
 func (a *Allocations) Render(data map[string]string) {
@@ -53,11 +53,11 @@ func (a *Allocations) UpdateTable(data map[string]string) {
 }
 
 func (a *Allocations) OnFocus() {
-	go a.Listner.Listen()
+	go a.Listener.Listen()
 }
 
 func (a *Allocations) OnBlur() {
-	go a.Listner.Stop()
+	go a.Listener.Stop()
 }
 
 func (a *Allocations) Refresher() {

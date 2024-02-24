@@ -36,12 +36,12 @@ func (mv *MapView) SetMapKeyValue(key, value string) {
 func (mv *MapView) DrawMapView() {
 	for I := 0; I < len(mv.Keys); I++ {
 		mv.Table.SetCell(I, 0, mv.KeyCell(mv.Keys[I]))
-		mv.Table.SetCell(I, 1, mv.KeyCell(mv.Values[I]))
+		mv.Table.SetCell(I, 1, mv.ValueCell(mv.Values[I]))
 	}
 }
 
 func (mv *MapView) KeyCell(key string) *tview.TableCell {
-	KeyCell := tview.NewTableCell(key + ":")
+	KeyCell := tview.NewTableCell(key)
 	KeyCell.SetAlign(tview.AlignLeft)
 	KeyCell.SetTextColor(tcell.ColorOrange)
 	return KeyCell

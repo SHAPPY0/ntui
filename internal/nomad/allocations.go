@@ -31,20 +31,20 @@ func (n *Nomad) Allocations(allocName string, params *models.NomadParams) ([]mod
 				Name:		allocation.Name,
 				TaskName:	Task[0].Name,
 				JobID:		allocation.JobID,
-				Namesapce:	allocation.Namespace,
+				Namespace:	allocation.Namespace,
 				TaskGroup:	allocation.TaskGroup,
 				Created:	time.Unix(0, allocation.CreateTime),
 				Modified:	time.Unix(0, allocation.ModifyTime),
 				Status:		AllocStatus,
-				Versions:	int(allocation.JobVersion),
+				Version:	int(allocation.JobVersion),
 				Client:		allocation.NodeID,
 				Tasks:		Task[0],
 				Events:		Events,
 				Volumn:		"N/A",
-				Cpu:		Task[0].Resource.CPU,
-				CpuUsage:	Task[0].Resource.CPUUsage,
-				Memory:		Task[0].Resource.MemoryMB,
-				MemoryUsage:Task[0].Resource.MemoryUsage,
+				Cpu:		Task[0].Resources.CPU,
+				CpuUsage:	Task[0].Resources.CPUUsage,
+				Memory:		Task[0].Resources.MemoryMB,
+				MemoryUsage:Task[0].Resources.MemoryUsage,
 			}
 			Result = append(Result, alloc)
 		}
@@ -56,7 +56,7 @@ func (n *Nomad) AllocationTask(params *models.NomadParams, allocationId string) 
 	Result := make([]models.Tasks, 0)
 
 	Data, _, Err := n.AllocationClient.Info(allocationId, &api.QueryOptions{
-		Namespace:	params.Namesapce,
+		Namespace:	params.Namespace,
 		Region:		params.Region,
 	})
 	if Err != nil {
@@ -76,9 +76,9 @@ func (n *Nomad) AllocationTask(params *models.NomadParams, allocationId string) 
 				DiskMB:		*task.Resources.DiskMB,
 			},
 			RestartPolicy:	models.TaskRestartPolicy{
-				Interval:	*tsaks.RestartPolicy.Interval,
+				Interval:	*tsak.RestartPolicy.Interval,
 				Attempts:	*task.RestartPolicy.Attempts,
-				Delay:		*task.RestartPolicy.Delay,
+				Delay:		*task.RestartPolicy.Attempts,
 				Mode:		*task.RestartPolicy.Mode,
 			},
 		}
@@ -115,12 +115,12 @@ func (n *Nomad) AllocationEvents(allocation *api.AllocationListStub) ([]models.E
 	sort.Slice(Result, func (I, J int) bool {
 		return Result[I].Time.After(Result[J].Time)
 	})
-	return REsult, AllocStatus
+	return Result, AllocStatus
 }
 
 func (n *Nomad) AllocationStats(params *models.NomadParams, allocation *api.Allocation) (models.AllocationStats, error) {
 	Data, Err := n.AllocationClient.Stats(allocation, &api/QueryOptions{
-		Namespace:	params.Namesapce,
+		Namespace:	params.Namespace,
 		Region:		params.Region,
 	})
 	if Err != nil {
@@ -133,8 +133,8 @@ func (n *Nomad) AllocationStats(params *models.NomadParams, allocation *api.Allo
 			Swap:			Data.ResourceUsage.MemoryStats.Swap,
 			Usage:			Data.ResourceUsage.MemoryStats.Usage,
 			MaxUsage:		Data.ResourceUsage.MemoryStats.MaxUsage,
-			KernalUsage:	Data.ResourceUsage.MemoryStats.KernalUsage,
-			KernalMaxUsage:	Data.ResourceUsage.MemoryStats.KernalMaxUsage,
+			KernelUsage:	Data.ResourceUsage.MemoryStats.KernelUsage,
+			KernelMaxUsage:	Data.ResourceUsage.MemoryStats.KernelMaxUsage,
 		},
 		Cpu:	models.AllocCpuStats{
 			SystemMode:			Data.ResourceUsage.CpuStats.SystemMode,
@@ -143,7 +143,7 @@ func (n *Nomad) AllocationStats(params *models.NomadParams, allocation *api.Allo
 			ThrottledPeriods:	Data.ResourceUsage.CpuStats.ThrottledPeriods,
 			ThrottledTime:		Data.ResourceUsage.CpuStats.ThrottledTime,
 			Percent:			Data.ResourceUsage.CpuStats.Percent,
-		}
+		},
 	}
 	return Result, nil
 }

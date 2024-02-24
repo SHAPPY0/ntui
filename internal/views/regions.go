@@ -28,11 +28,11 @@ func (reg *Regions) SetOnSelectFn(fn func(int, int)) {
 	reg.Table.SetOnSelectFn(fn)
 }
 
-func (reg *Regions) SetOnTabPressFn(fn func(int, int)) {
+func (reg *Regions) SetOnTabPressFn(fn func()) {
 	reg.Table.SetOnTabPressFn(fn)
 }
 
-func (reg *Regionns) UpdateTableData(data []models.Regions) {
+func (reg *Regions) UpdateTableData(data []models.Regions) {
 	reg.Data = data
 	reg.SetTableTitle(len(reg.Data), "", "")
 	RowTextColor := tcell.ColorWhite

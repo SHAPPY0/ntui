@@ -42,7 +42,7 @@ func (l *Log) BindInputCapture() {
 		switch event.Key() {
 		case utils.NtuiRuneKey.Key:
 			switch event.Rune() {
-			case "e":
+			case 'e':
 				if l.App.Layout.GetActivePage() == "log" {
 					fmt.Println("E Pressed")
 				}
@@ -67,11 +67,11 @@ func (l *Log) UpdateMenu() {
 }
 
 func (l *Log) OnFocus() {
-	l.SelectedAlloc := l.App.Primitives.Tasks.SelectedValue
+	l.SelectedAlloc = l.App.Primitives.Tasks.SelectedValue
 	l.UpdateMenu()
 	allocName := l.SelectedAlloc.Name
 	allocID := utils.GetID(l.SelectedAlloc.ID)
-	l.SetTitleMenu(l.GetTitle() + "-" + l.DefaultType)
+	l.SetTitleName(l.GetTitle() + "-" + l.DefaultType)
 	l.SetTextVTitle(allocID, allocName)
 	l.StopLogChan = make(chan struct{})
 	l.FetchLog()
@@ -88,9 +88,9 @@ func (l *Log) FetchLog() {
 		l.StopLogChan,
 	)
 	if l.Follow {
-		l.Follow()
+		l.FollowX()
 	}
-	l.ClearLog()
+	l.ClearLogs()
 	go l.StartLogStream(LogChan, ErrChan)
 }
 
@@ -118,7 +118,7 @@ func (l *Log) SetLogType(logType string) {
 	l.DefaultType = logType
 }
 
-func (l *Log) SetFollow(follor bool) {
+func (l *Log) SetFollow(follow bool) {
 	l.Follow = follow
 }
 

@@ -26,10 +26,10 @@ func NewSplash() *Splash {
 		Title:	TitleSplash,
 	}
 	s.SetDirection(tview.FlexRow)
-	Logo := tview.NewTextView()
-	Logo.SetDynamicColors(true)
-	Logo.SetTextAlign(tview.AlignCenter)
-	s.DrawLogo(Logo)
+	LogoV := tview.NewTextView()
+	LogoV.SetDynamicColors(true)
+	LogoV.SetTextAlign(tview.AlignCenter)
+	s.DrawLogo(LogoV)
 
 	Version := tview.NewTextView()
 	Version.SetDynamicColors(true)
@@ -37,8 +37,8 @@ func NewSplash() *Splash {
 
 	s.DrawVersion(Version, "0.1")
 
-	s.AddItem(Log, 10, 1, false)
-	s.AddItem(Versions, 1, 1, false)
+	s.AddItem(LogoV, 10, 1, false)
+	s.AddItem(Version, 1, 1, false)
 	return s
 }
 
@@ -48,11 +48,11 @@ func (s *Splash) GetTitle() string {
 
 
 func (s *Splash) DrawLogo(t *tview.TextView) {
-	Logo := strings.Join(Logo, fmt.Sprintf("\n[%s::b]", "#cccccc"))
+	LogoV := strings.Join(Logo, fmt.Sprintf("\n[%s::b]", "#cccccc"))
 	fmt.Fprintf(t, "%s[%s::b]%s\n",
 			strings.Repeat("\n", 2),
 			"#cccccc",
-			logo)
+			LogoV)
 }
 
 func (s *Splash) DrawVersion(t *tview.TextView, Version string) {

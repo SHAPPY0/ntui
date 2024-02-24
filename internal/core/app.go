@@ -21,11 +21,10 @@ type PrimitivesX struct {
 	Namespaces		*Namespaces
 	Main			*Main
 	Jobs			*Jobs
-	TaskGroup		*TaskGroups
+	TaskGroups		*TaskGroups
 	Allocations		*Allocations
 	Tasks			*Tasks
-	Allocations		*Allocations
-	Tasks 			*Tasks
+	Log				*Log
 	Versions		*Versions
 	VersionDiff 	*VersionDiff	
 }
@@ -40,12 +39,13 @@ func NewApp(config *Config) (*App, error) {
 	NomadClient, Err :=	nomad.New()
 	if Err != nil {
 		fmt.Println("Error")
+		return a, Err
 	}
 	a.NomadClient = NomadClient
 	return a, nil
 }
 
-func (a *App) Init error {
+func (a *App) Init() error {
 	app.Primitives = PrimitivesX{
 		Regions:		NewRegions(app),
 		Namespaces:		NewNamespaces(app),
@@ -85,17 +85,17 @@ func BindAppKeys(app *App) {
 			break
 		case utils.NtuiRuneKey.Key:
 			switch event.Rune() {
-			case "l":
+			case 'l':
 				if app.Layout.GetActivePage() == "tasks" {
 					app.Layout.OpenPage("log", true)
 				}
 				break
-			case "e":
+			case 'e':
 				if app.Layout.GetActivePage() == "log" {
 					app.Primitives.Log.FetchStdErrLog()
 				}
 				break
-			case "o":
+			case 'o':
 				if app.Layout.GetActivePage() == "log" {
 					app.Primitives.Log.FetchStdOutLog()
 				}

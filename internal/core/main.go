@@ -17,6 +17,6 @@ func NewMain(app *App) *Main {
 	m.App.Layout.Body.AddPageX("main", m, true, false)
 	m.SetDirection(tview.FlexRow)
 	m.AddItem(m.App.Primitives.Regions, 0,  1, true)
-	m.AddItem(m.App.Primitives.Namespace, 0, 1, false)
+	m.AddItem(m.App.Primitives.Namespaces, 0, 1, false)
 	return m
 }

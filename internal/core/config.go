@@ -17,7 +17,7 @@ type Config struct {
 	AppName			string 		`json:"AppName"`
 	NomadBaseUrl	string		`json:"Nomad_Server_Base_Url"`
 	NomadHttpAuth	string		`json:"Nomad_Http_Auth"`
-	NomadToken		string		`json:"Nomad-Token"`
+	NomadToken		string		`json:"Nomad_Token"`
 	Region			string		`json:"Nomad_Region"`
 	Namespace		string		`json:"Nomad_Namespace"`
 	NomadCaCert 	string 		`json:"Nomad_Cacert"`
@@ -30,7 +30,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	c := &Config{
-		AppName:	"ntui-app"
+		AppName:	"ntui-app",
 	}
 	return c
 }
@@ -40,7 +40,7 @@ func (c *Config) SetRegion(region string) {
 }
 
 func (c *Config) GetRegion() string {
-	return c.Regions
+	return c.Region
 }
 
 func (c *Config) SetNamespace(ns string) {
@@ -57,12 +57,12 @@ func (c *Config) IsRegionInConfig() bool {
 
 func GetValue(c *Config, key string) string {
 	r := reflect.ValueOf(c)
-	f := reflect.Indirect(r).FieldByName(Key)
+	f := reflect.Indirect(r).FieldByName(key)
 	return string(f.String())
 }
 
 func (c *Config) Load() (*Config, error) {
-	ConfigPath := "/home/.ntui/confnig.json"
+	ConfigPath := "/home/ipp-dev/.ntui/confnig.json"
 	Config := c
 	ConfigJson, Err := ioutil.ReadFile(ConfigPath)
 	if Err != nil {

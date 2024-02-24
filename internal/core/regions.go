@@ -18,7 +18,7 @@ func NewRegions(app *App) *Regions {
 	reg.App.Layout.Body.AddPageX(reg.GetTitle(), reg, true, false)
 	reg.UpdateTable()
 	reg.SetOnSelectFn(reg.OnRowSelected)
-	reg.SetOnTabPress(reg.OnTabPress)
+	reg.SetOnTabPressFn(reg.OnTabPress)
 	return reg
 }
 

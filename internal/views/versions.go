@@ -14,7 +14,7 @@ type Versoins struct {
 	*widgets.Table
 	Title		string
 	Headers		[]string
-	Data		[]models.JobVersions
+	Data		[]models.JobVersion
 }
 
 func NewVersions() *Versions {
@@ -36,7 +36,7 @@ func (v *Versions) SetOnSelectFn(fn func(int, int)) {
 	v.Table.SetOnSelectFn(fn)
 }
 
-func (v *Versions) SetOnTabPressFn(fn func(int, int)) {
+func (v *Versions) SetOnTabPressFn(fn func()) {
 	v.Table.SetOnTabPressFn(fn)
 }
 
@@ -50,14 +50,14 @@ func FindChangesCount(taskGroupDiff []*api.TaskGroupDiff) int {
 	return Count
 }
 
-func (v *Versions) UpdateTableData(jobId string, jobVersions []models.JobVersions, diffs []models.JobVersionDiff) {
+func (v *Versions) UpdateTableData(jobId string, jobVersions []models.JobVersion, diffs []models.JobVersionDiff) {
 	v.Data = jobVersions
 	v.SetTableTitle(len(v.Data), jobId, "")
 	v.Table.ClearTable()
 	for I := 0; I <len(v.Data); I++ {
 		RowTextColor := tcell.ColorWhite
-		v.Table.DrawCell(I + 1, 0, "#" + utils.IntToStr(int(v.Daa[I].Version)), RowTextColor)
-		Stable = "No"
+		v.Table.DrawCell(I + 1, 0, "#" + utils.IntToStr(int(v.Data[I].Version)), RowTextColor)
+		Stable := "No"
 		if v.Data[I].Stable {
 			Stable = "Yes"
 		}

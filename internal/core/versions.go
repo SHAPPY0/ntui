@@ -19,7 +19,7 @@ type Versions struct {
 func NewVersions(app *App) *Versions {
 	v := &Versions{
 		Versions:			views.NewVersions(),
-		App:				app
+		App:				app,
 	}
 	v.App.Layout.Body.AddPageX(v.GetTitle(), v, true, false)
 	v.SetOnSelectFn(v.OnRowSelected)
@@ -42,24 +42,24 @@ func (v *Versions) OnRowSelected(row, col int) {
 	go func() {
 		v.App.Layout.QueueUpdateDraw(func() {
 			if v.SelectedValue["changes"] != "No Changes" {
-				v.App.Primitives.VersionDiff.Render(v.JobId, v.SelectedValue, v.Diff[row - 1])
-				v.App.Layout.OpenPage("versionDiff", true)
+				v.App.Primitives.VersionDiff.Render(v.JobId, v.SelectedValue, v.Diffs[row - 1])
+				v.App.Layout.OpenPage("versiondiff", true)
 			}
 		})
 	}()
 }
 
-func (v *Versios) UpdateTable() {
+func (v *Versions) UpdateTable() {
 	SelectedJob := v.App.Primitives.Jobs.SelectedValue
 	if SelectedJob != nil {
 		JobID := SelectedJob["name"]
 		if JobID != "" {
 			v.JobId = JobID
 			Params := &models.NomadParams{
-				Regions:		v.App.Config.GetRegion(),
+				Region:		v.App.Config.GetRegion(),
 				Namespace:		v.App.Config.GetNamespace(),
 			}
-			JobVersions, Diff, _ := v.App.NomadClient.Versions(v.JobId, Params)
+			JobVersions, Diffs, _ := v.App.NomadClient.Versions(v.JobId, Params)
 			v.Diffs = Diffs
 			v.UpdateTableData(v.JobId, JobVersions, Diffs)
 		}
