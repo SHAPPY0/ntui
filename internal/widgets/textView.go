@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"github.com/rivo/tview"
+	"github.com/shappy0/ntui/internal/utils"
 )
 
 type TextView struct {
@@ -28,9 +29,9 @@ func (tv *TextView) SetTitleName(name string) {
 
 func (tv *TextView) SetTextVTitle(a, b string) {
 	if a != "" && b != "" {
-		tv.SetTitle(fmt.Sprintf(" [::b][orange]%s (%s/%s) ", strings.ToUpper(tv.Title), a, b))
+		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s (%s/%s) ", utils.ColorTad7c5a, strings.ToUpper(tv.Title), a, b))
 	} else {
-		tv.SetTitle(fmt.Sprintf(" [::b][orage]%s ", strings.ToUpper(tv.Title)))
+		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s ", utils.ColorTad7c5a, strings.ToUpper(tv.Title)))
 	}
 }
 

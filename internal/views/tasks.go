@@ -13,7 +13,7 @@ var (
 	TitleEvents = "events"
 	TaskLeftInfoKeys = []string{"Status", "JobId", "Namespace", "Client", "Modified At", "Started At", "Driver"}
 	TaskLeftInfoValues = []string{"", "", "", "", "", "", ""}
-	TaskRightInfoKeys = []string{"Name", "Version", "Image", "Volumns", "LifeCycle"}
+	TaskRightInfoKeys = []string{"Name", "Version", "Image", "Volumes", "LifeCycle"}
 	TaskRightInfoValues = []string{"", "", "", "", ""}
 )
 
@@ -69,7 +69,7 @@ func GetTaskData(data models.Allocations) {
 	TaskRightInfoValues[0] = utils.ToCapitalize(data.Name)
 	TaskRightInfoValues[1] = utils.IntToStr(data.Version)
 	TaskRightInfoValues[2] = data.Tasks.Config["image"].(string)
-	Volumn, Ok := data.Tasks.Config["volumns"]
+	Volumn, Ok := data.Tasks.Config["volumes"]
 	if Ok && len(Volumn.([]interface{})) > 0 {
 		TaskRightInfoValues[3] = Volumn.([]interface{})[0].(string)
 	}

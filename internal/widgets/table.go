@@ -55,11 +55,11 @@ func (t *Table) GetSelectedItem() map[string]string {
 
 func (t *Table) SetTableTitle(count int, a, b string) {
 	if a != "" && b == "" {
-		t.SetTitle(fmt.Sprintf(" [::b][orange]%s(%s)[%d] ", strings.ToUpper(t.Title), a, count))
+		t.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s)[%d] ", utils.ColorTad7c5a, strings.ToUpper(t.Title), a, count))
 	} else if a != "" && b != "" {
-		t.SetTitle(fmt.Sprintf(" [::b][orange]%s(%s/%s)[%d] ", strings.ToUpper(t.Title), a, b, count))
+		t.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s/%s)[%d] ", utils.ColorTad7c5a, strings.ToUpper(t.Title), a, b, count))
 	} else {
-		t.SetTitle(fmt.Sprintf(" [::b][orange]%s [%d] ", strings.ToUpper(t.Title), count))
+		t.SetTitle(fmt.Sprintf(" [::b][%s]%s [%d] ", utils.ColorT70d5bf, strings.ToUpper(t.Title), count))
 	}
 }
 

@@ -12,6 +12,16 @@ const (
 	ColorGreen  =	tcell.ColorGreen
 )
 
+const (
+	ColorTOrange = "orange"
+	ColorTWhite = "white"
+	ColorTBlue = "blue"
+	ColorTRed = "red"
+	ColorTGreen = "green"
+	ColorTad7c5a = "#ad7c5a"
+	ColorT70d5bf = "#70d5bf"
+)
+
 func ColorizeStatusCell(status string) (tcell.Color, string) {
 	CellColor := tcell.ColorWhite
 	Status := ToCapitalize(status)
