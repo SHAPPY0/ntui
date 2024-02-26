@@ -33,13 +33,11 @@ func (vd *VersionDiff) SetData(jobId string, detail map[string]string, diff mode
 	Data := ""
 	for I := 0; I < len(diff.TaskGroups); I++ {
 		if diff.TaskGroups[I].Type != "None" {
-			Data += "[b][blue]TaskGroup:[white] " + diff.TaskGroups[I].Name + "\n"
 			Data += fmt.Sprintf("[b][%s]TaskGroup:[%s] %s\n", utils.ColorT70d5bf, utils.ColorTWhite, diff.TaskGroups[I].Name)
 			Tasks := diff.TaskGroups[I].Tasks
 			for J := 0; J < len(Tasks); J++ {
 				if Tasks[J].Type != "None" {
 					if Tasks[J].Type == "Edited" {
-						Data += "[[green]+[white]/[red]-[white]]" + Tasks[J].Name + "\n"
 						Data += fmt.Sprintf("[[%s]+[%s]/[%s]-[%s]] %s\n", utils.ColorTGreen, utils.ColorTWhite, utils.ColorTRed, utils.ColorTWhite, Tasks[J].Name)
 						TaskObjects := Tasks[J].Objects
 						for K := 0; K < len(TaskObjects); K++ {
@@ -47,8 +45,7 @@ func (vd *VersionDiff) SetData(jobId string, detail map[string]string, diff mode
 							TaskFields := TaskObjects[K].Fields
 							for M := 0; M < len(TaskFields); M++ {
 								if TaskFields[M].Type == "Edited" {
-									Data += "---[[green]+[white]/[red]-[white]] " + TaskFields[M].Name + ": " + TaskFields[M].Old + " [green]=>[white] " + TaskFields[M].New + "\n"
-									Data += fmt.Sprintf("---[[%s]+[%s/[%s]-[%s]] %s: %s [%s]=>[%s] %s\n", 
+									Data += fmt.Sprintf("   [[%s]+[%s/[%s]-[%s]] %s: %s [%s]=>[%s] %s\n", 
 										utils.ColorTGreen,
 										utils.ColorTWhite,
 										utils.ColorTRed,

@@ -1,11 +1,15 @@
 package core
 
 import (
+	"fmt"
 	"os"
 	"io/ioutil"
 	"encoding/json"
 	"reflect"
 )
+
+const DefaultConfigDir = ".ntui"
+const DefaultConfigFile = "config.json"
 
 var EnvVars = map[string]string{
 	"NOMAD_ADDR": "NomadBaseUrl",
@@ -62,7 +66,11 @@ func GetValue(c *Config, key string) string {
 }
 
 func (c *Config) Load() (*Config, error) {
-	ConfigPath := "/home/ipp-dev/.ntui/config.json"
+	ConfigPath := os.Getenv("CONFIG_PATH")
+	if ConfigPath == "" {
+		HomeDir, _ := os.UserHomeDir()
+		ConfigPath = fmt.Sprintf("%s/%s/%s", HomeDir, DefaultConfigDir, DefaultConfigFile)
+	}
 	Config := c
 	ConfigJson, Err := ioutil.ReadFile(ConfigPath)
 	if Err != nil {
