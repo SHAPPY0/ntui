@@ -27,6 +27,7 @@ func NewFooter() *Footer {
 	//Footer Grid 2
 	f.Grid2.SetBorder(false)
 	f.Grid2.SetDynamicColors(true)
+	f.Grid2.SetTextAlignX("AlignCenter")
 
 	//Footer Grid 3
 	f.SetBorder(false)
@@ -42,11 +43,13 @@ func (f *Footer) SetAlert(message models.AlertMessage) {
 		f.Grid2.ClearX()
 		return
 	}
-	Color := "green"
+	Color := utils.ColorTGreen
 	if message.Type == utils.Warning {
-		Color = "orange"
+		Color = utils.ColorTOrange
 	} else if message.Type == utils.Error {
-		Color = "red"
+		Color = utils.ColorTRed
+	} else if message.Type == utils.Loader {
+		Color = utils.ColorTad7c5a
 	}
 	fmt.Fprintf(f.Grid2, "[%s]%s", Color, message.Text)
 }

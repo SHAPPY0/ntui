@@ -26,7 +26,8 @@ type PrimitivesX struct {
 	Tasks			*Tasks
 	Log				*Log
 	Versions		*Versions
-	VersionDiff 	*VersionDiff	
+	VersionDiff 	*VersionDiff
+	Modal 			*Modal
 }
 
 func NewApp(config *Config) (*App, error) {
@@ -56,6 +57,7 @@ func (app *App) Init() error {
 		Log:			NewLog(app),
 		Versions:		NewVersions(app),
 		VersionDiff:	NewVersionDiff(app),
+		Modal:			NewModal(app),
 	}
 	app.Primitives.Main  = NewMain(app)
 	BindAppKeys(app)
@@ -81,6 +83,11 @@ func BindAppKeys(app *App) {
 		case utils.NtuiCtrlVKey.Key:
 			if app.Layout.GetActivePage() == "taskgroups" {
 				app.Layout.OpenPage("versions", true)
+			}
+			break
+		case utils.NtuiCtrlTKey.Key:
+			if app.Layout.GetActivePage() == "allocations" {
+				app.Primitives.Allocations.InitRestartModal()
 			}
 			break
 		case utils.NtuiRuneKey.Key:

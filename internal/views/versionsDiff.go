@@ -45,7 +45,7 @@ func (vd *VersionDiff) SetData(jobId string, detail map[string]string, diff mode
 							TaskFields := TaskObjects[K].Fields
 							for M := 0; M < len(TaskFields); M++ {
 								if TaskFields[M].Type == "Edited" {
-									Data += fmt.Sprintf("   [[%s]+[%s/[%s]-[%s]] %s: %s [%s]=>[%s] %s\n", 
+									Data += fmt.Sprintf("   [[%s]+[%s]/[%s]-[%s]] %s: %s [%s]=>[%s] %s\n", 
 										utils.ColorTGreen,
 										utils.ColorTWhite,
 										utils.ColorTRed,

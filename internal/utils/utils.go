@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
+	"math"
 )
 
 func IntToStr(value int) string {
@@ -29,6 +31,17 @@ func ToCapitalize(str string) string {
 
 func DateTimeToStr(dateTime time.Time) string {
 	return dateTime.Format("2006-01-02 15:04:05")
+}
+
+func DateTimeDiff(dateTime time.Time) string {
+	Current := time.Now()
+	Hours := Current.Sub(dateTime).Hours()
+	Hours, MinFraction := math.Modf(Hours)
+	Minutes := MinFraction * 60
+	Minutes, SecFraction := math.Modf(Minutes)
+	Seconds := SecFraction * 60
+	Diff := fmt.Sprintf("%shrs %smins %ssecs ago", fmt.Sprint(Hours), fmt.Sprint(Minutes), fmt.Sprint(math.Floor(Seconds)))
+	return Diff
 }
 
 func FormatMemoryUsage(value int) int {

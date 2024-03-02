@@ -1,6 +1,7 @@
 package nomad
 
 import (
+	"fmt"
 	"time"
 	"sort"
 	"github.com/hashicorp/nomad/api"
@@ -11,6 +12,7 @@ type AllocationClient interface {
 	List(*api.QueryOptions) ([]*api.AllocationListStub, *api.QueryMeta, error)
 	Info(string, *api.QueryOptions) (*api.Allocation, *api.QueryMeta, error)
 	Stats(*api.Allocation, *api.QueryOptions) (*api.AllocResourceUsage, error)
+	Restart(*api.Allocation, string, *api.QueryOptions) error
 }
 
 func (n *Nomad) Allocations(allocName string, params *models.NomadParams) ([]models.Allocations, error) {
@@ -146,4 +148,14 @@ func (n *Nomad) AllocationStats(params *models.NomadParams, allocation *api.Allo
 		},
 	}
 	return Result, nil
+}
+
+func (n *Nomad) Restart(allocId, taskName string, params *models.NomadParams) error {
+	if Err := n.AllocationClient.Restart(&api.Allocation{ID: allocId}, taskName, &api.QueryOptions{
+		Namespace:	params.Namespace,
+		Region:		params.Region,
+	}); Err != nil {
+		return Err
+	}
+	return nil
 }

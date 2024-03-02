@@ -32,9 +32,11 @@ func (n *Namespaces) OnTabPress() {
 func (n *Namespaces) OnRowSelected(row, col int) {
 	n.SelectedValue = n.GetSelectedItem()
 	n.App.Config.SetNamespace(n.SelectedValue["name"])
+	n.App.Alert.Loader(true)
 	go func() {
 		n.App.Layout.QueueUpdateDraw(func() {
 			n.App.Primitives.Jobs.UpdateTable()
+			n.App.Alert.Loader(false)
 			n.App.Layout.OpenPage("jobs", true)
 		})
 	}()

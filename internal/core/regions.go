@@ -33,9 +33,11 @@ func (reg *Regions) OnTabPress() {
 func (reg *Regions) OnRowSelected(row, col int) {
 	reg.SelectedValue = reg.GetSelectedItem()
 	reg.App.Config.SetRegion(reg.SelectedValue["region"])
+	reg.App.Alert.Loader(true)
 	go func() {
 		reg.App.Layout.QueueUpdateDraw(func() {
 			reg.App.Primitives.Namespaces.UpdateTable()
+			reg.App.Alert.Loader(false)
 			reg.OnTabPress()
 		})
 	}()

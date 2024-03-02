@@ -39,10 +39,12 @@ func (tg *TaskGroups) OnBlur() {
 
 func (tg *TaskGroups) OnRowSelected(row, col int) {
 	tg.SelectedValue = tg.GetSelectedItem()
+	tg.App.Alert.Loader(true)
 	go func() {
 		tg.App.Layout.QueueUpdateDraw(func() {
 			tg.SelectedValue["jobId"] = tg.JobId
 			tg.App.Primitives.Allocations.Render(tg.SelectedValue)
+			tg.App.Alert.Loader(false)
 			tg.App.Layout.OpenPage("allocations", true)
 		})
 	}()

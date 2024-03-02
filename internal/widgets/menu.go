@@ -66,6 +66,11 @@ var (
 		Icon:		"ctrl+r",
 		Description: "Revert Version",
 	}
+	RestartTaskMenu = Item{
+		Name:		"restart_task",
+		Icon:		"ctrl+t",
+		Description: "Restart Task",
+	}
 )
 
 func NewMenu() *Menu {

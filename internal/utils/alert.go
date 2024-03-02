@@ -7,6 +7,7 @@ import (
 
 const (
 	DefaultFlashDelay	=	3 * time.Second
+	Loader	=	"loader"
 )
 
 type Alert struct {
@@ -52,5 +53,14 @@ func (a *Alert) Hide() {
 			a.AlertChan <-models.AlertMessage{}
 			return
 		}
+	}
+}
+
+func (a *Alert) Loader(loading bool) {
+	if loading {
+		a.Message = models.AlertMessage{Type: Loader, Text: "Loading..."}
+		a.AlertChan <-a.Message
+	} else {
+		a.AlertChan <-models.AlertMessage{}
 	}
 }

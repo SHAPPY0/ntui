@@ -38,10 +38,12 @@ func (j *Jobs) OnBlur() {
 
 func (j *Jobs) OnRowSelected(row, col int) {
 	j.SelectedValue = j.GetSelectedItem()
+	j.App.Alert.Loader(true)
 	go func() {
 		j.App.Layout.QueueUpdateDraw(func() {
 			JobId := j.SelectedValue["name"]
 			j.App.Primitives.TaskGroups.UpdateTable(JobId)
+			j.App.Alert.Loader(false)
 			j.App.Layout.OpenPage("taskgroups", true)
 		})
 	}()

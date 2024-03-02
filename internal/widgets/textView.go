@@ -27,6 +27,18 @@ func (tv *TextView) SetTitleName(name string) {
 	tv.Title = name
 }
 
+func (tv *TextView) SetTextAlignX(align string) {
+	alignX := tview.AlignLeft
+	if align == "AlignCenter" {
+		alignX = tview.AlignCenter
+	} else if align == "AlignLeft" {
+		alignX = tview.AlignLeft
+	} else if align == "AlignRight" {
+		alignX = tview.AlignRight
+	}
+	tv.SetTextAlign(alignX)
+}
+
 func (tv *TextView) SetTextVTitle(a, b string) {
 	if a != "" && b != "" {
 		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s (%s/%s) ", utils.ColorTad7c5a, strings.ToUpper(tv.Title), a, b))

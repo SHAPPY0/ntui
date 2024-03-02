@@ -125,7 +125,7 @@ func (t *Tasks) UpdateEventTable(events []models.Events) {
 	t.EventsTable.SetSelectable(false, false)
 	RowTextColor := tcell.ColorWhite
 	for I := 0; I < len(events); I++ {
-		t.EventsTable.DrawCell(I + 1, 0, utils.DateTimeToStr(events[I].Time), RowTextColor)
+		t.EventsTable.DrawCell(I + 1, 0, utils.DateTimeDiff(events[I].Time), RowTextColor)
 		t.EventsTable.DrawCell(I + 1, 1, events[I].Type, RowTextColor)
 		t.EventsTable.DrawCell(I + 1, 2, events[I].DisplayMessage, RowTextColor)
 	}

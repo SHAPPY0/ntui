@@ -42,6 +42,11 @@ var (
 		KeyLabel:		"L",
 		KeyDescription: "To  Open Log",
 	}
+	NtuiCtrlTKey = NtuiKey{
+		Key:			tcell.KeyCtrlT,
+		KeyLabel:		"Ctrl + t",
+		KeyDescription: "Control and T",
+	}
 )
 
 var NtuiKeyBindings = []NtuiKey{

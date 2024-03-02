@@ -10,6 +10,7 @@ const (
 	ColorGray 	=	tcell.ColorGray
 	ColorRed    =   tcell.ColorRed
 	ColorGreen  =	tcell.ColorGreen
+	ColorOrange = 	tcell.ColorOrange
 )
 
 const (
