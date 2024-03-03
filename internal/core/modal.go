@@ -40,5 +40,5 @@ func (m *Modal) SetData(data map[string]string) {
 
 func (m *Modal) SetResponseFunc(fn func(int, string)) {
 	m.ResponseFn = fn
-	m.SetDoneFn(m.ResponseFn)
+	m.SetDoneFunc(m.ResponseFn)
 }

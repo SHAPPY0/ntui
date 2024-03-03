@@ -111,7 +111,7 @@ func (a *Allocations) HandleButtonResponse(index int, label string) {
 func (a *Allocations) InitRestartModal() {
 	a.SelectedValue = a.GetSelectedItem()
 	ConfirmModal := a.App.Primitives.Modal
-	Title := fmt.Sprint("Are you sure to restart %s/%s?", a.SelectedValue["id"], a.SelectedValue["name"])
+	Title := fmt.Sprintf("Are you sure to restart %s/%s?", a.SelectedValue["id"], a.SelectedValue["name"])
 	ConfirmModal.SetTitle(Title)
 	ConfirmModal.SetData(a.SelectedValue)
 	ConfirmModal.AddButtons([]string{"Yes", "No"})

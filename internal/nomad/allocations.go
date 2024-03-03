@@ -1,7 +1,7 @@
 package nomad
 
 import (
-	"fmt"
+	// "fmt"
 	"time"
 	"sort"
 	"github.com/hashicorp/nomad/api"

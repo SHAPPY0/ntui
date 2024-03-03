@@ -53,7 +53,7 @@ func (a *Allocations) UpdateTableData(data []models.Allocations) {
 		a.Table.DrawCell(I + 1, 2, Status, CellColor)
 		a.Table.DrawCell(I + 1, 3, utils.IntToStr(a.Data[I].Version), CellColor)
 		a.Table.DrawCell(I + 1, 4, utils.DateTimeToStr(a.Data[I].Created), CellColor)
-		a.Table.DrawCell(I + 1, 5, utils.DateTimeToDiff(a.Data[I].Modified), CellColor)
+		a.Table.DrawCell(I + 1, 5, utils.DateTimeDiff(a.Data[I].Modified), CellColor)
 		a.Table.DrawCell(I + 1, 6, utils.GetID(a.Data[I].Client), CellColor)
 		a.Table.DrawCell(I + 1, 7, a.Data[I].Volumn, CellColor)
 		CpuStat := utils.IntToStr(a.Data[I].CpuUsage) + "MHz/" + utils.IntToStr(a.Data[I].Cpu) + "MHz"

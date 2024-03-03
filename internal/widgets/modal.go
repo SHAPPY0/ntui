@@ -13,7 +13,7 @@ type Modal struct {
 
 func NewModal() *Modal {
 	m := &Modal {
-		Modal:	tview.NewModa(),
+		Modal:	tview.NewModal(),
 	}
 	m.SetBackgroundColor(utils.ColorOrange)
 	return m
