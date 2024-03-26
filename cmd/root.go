@@ -51,7 +51,7 @@ func InitFlags() {
 		"",
 		"Get the version of ntui app",
 	)
-	rootCmd.Flags().InitVarP(
+	rootCmd.Flags().IntVarP(
 		flags.RefreshRate,
 		"refresh", "r",
 		DefaultRefreshRate,
@@ -60,6 +60,7 @@ func InitFlags() {
 	rootCmd.Flags().StringVarP(
 		flags.ConfigPath,
 		"config_path", "c",
+		"",
 		"Specify the config file path",
 	)
 	rootCmd.Flags()
