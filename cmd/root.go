@@ -10,9 +10,9 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:	"ntui",
-		Short:	"Short Desc of ntui",
-		Long:	"Long Desc of ntui",
+		Use:	core.AppName,
+		Short:	core.ShortDesc,
+		Long:	core.LongDesc,
 		RunE:	Init,
 	}
 )
@@ -20,8 +20,10 @@ var (
 func Run() {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	log.Info().Msg("Starting ntui")
+	InitFlags()
 	if Err := rootCmd.Execute(); Err != nil {
 		fmt.Println(Err)
+		log.Error().Msg(Err.Error())
 	}
 }
 
@@ -39,4 +41,26 @@ func Init(cmd *cobra.Command, args []string) error {
 	}
 	App.RunX()
 	return nil
+}
+
+func InitFlags() {
+	flags := NewFlags()
+	rootCmd.Flags().StringVarP(
+		flags.Version,
+		"version", "v",
+		"",
+		"Get the version of ntui app",
+	)
+	rootCmd.Flags().InitVarP(
+		flags.RefreshRate,
+		"refresh", "r",
+		DefaultRefreshRate,
+		"Specify the default refresh rate as an integer(sec)",
+	)
+	rootCmd.Flags().StringVarP(
+		flags.ConfigPath,
+		"config_path", "c",
+		"Specify the config file path",
+	)
+	rootCmd.Flags()
 }

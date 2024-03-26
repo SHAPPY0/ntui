@@ -78,6 +78,7 @@ func (l *Log) OnFocus() {
 }
 
 func (l *Log) FetchLog() {
+	l.App.Alert.Loader(true)
 	LogChan, ErrChan := l.App.NomadClient.Logs(
 		l.SelectedAlloc.ID,
 		l.SelectedAlloc.TaskName,
@@ -91,6 +92,7 @@ func (l *Log) FetchLog() {
 		l.FollowX()
 	}
 	l.ClearLogs()
+	l.App.Alert.Loader(false)
 	go l.StartLogStream(LogChan, ErrChan)
 }
 

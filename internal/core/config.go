@@ -8,8 +8,13 @@ import (
 	"reflect"
 )
 
-const DefaultConfigDir = ".ntui"
-const DefaultConfigFile = "config.json"
+const (
+	AppName = "ntui"
+	ShortDesc = "A graphical CLI for your Hashicorp Nomad Cluster Management"
+	LongDesc = "Ntui is a CLI to view and manage your Hashicorp Nomad Clusters."
+	DefaultConfigDir = "." + AppName
+	DefaultConfigFile = "config.json"
+)
 
 var EnvVars = map[string]string{
 	"NOMAD_ADDR": "NomadBaseUrl",
@@ -34,7 +39,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	c := &Config{
-		AppName:	"ntui-app",
+		AppName:	AppName,
 	}
 	return c
 }

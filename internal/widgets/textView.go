@@ -41,9 +41,9 @@ func (tv *TextView) SetTextAlignX(align string) {
 
 func (tv *TextView) SetTextVTitle(a, b string) {
 	if a != "" && b != "" {
-		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s (%s/%s) ", utils.ColorTad7c5a, strings.ToUpper(tv.Title), a, b))
+		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s (%s/%s) ", utils.ColorT70d5bf, strings.ToUpper(tv.Title), a, b))
 	} else {
-		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s ", utils.ColorTad7c5a, strings.ToUpper(tv.Title)))
+		tv.SetTitle(fmt.Sprintf(" [::b][%s]%s ", utils.ColorT70d5bf, strings.ToUpper(tv.Title)))
 	}
 }
 

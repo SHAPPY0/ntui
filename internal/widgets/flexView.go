@@ -25,9 +25,9 @@ func (f *Flex) AddItemX(primitive tview.Primitive, fixedSize, proportion int, fo
 
 func (f *Flex) SetTitleX(title, a string) {
 	if a != "" {
-		f.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s) ", utils.ColorTad7c5a, strings.ToUpper(title), a))
+		f.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s) ", utils.ColorT70d5bf, strings.ToUpper(title), a))
 	} else {
-		f.SetTitle(fmt.Sprintf(" [::b][%s]%s ", utils.ColorTad7c5a, strings.ToUpper(title)))
+		f.SetTitle(fmt.Sprintf(" [::b][%s]%s ", utils.ColorT70d5bf, strings.ToUpper(title)))
 	}
 }
 
