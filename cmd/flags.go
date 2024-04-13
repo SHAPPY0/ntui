@@ -6,26 +6,36 @@ const (
 	DefaultConfigPath = ""
 	DefaultRegion = ""
 	DefaultNamespace = ""
+	DefaultHomeDir = ""
+	DefaultNomadHost = ""
+	DefaultNomadToken = ""
+	DefaultSkipVerify = false
 )
 
 type Flags struct {
-	Version 		*string
 	BuildNo			*string
 	RefreshRate 	*int
 	ConfigPath 		*string
 	LogLevel 		*string
 	Region 			*string
 	Namespace 		*string
+	HomeDir			*string
+	NomadHost 		*string
+	NomadToken		*string
+	SkipVerify 		*bool
 }
 
 func NewFlags() *Flags {
 	f := &Flags{
-		Version:		StrPtr(""),
 		RefreshRate:	IntPtr(DefaultRefreshRate),
 		ConfigPath:		StrPtr(DefaultConfigPath),
 		LogLevel:		StrPtr(DefaultLogLevel),
 		Region:			StrPtr(DefaultRegion),
 		Namespace:		StrPtr(DefaultNamespace),
+		HomeDir:		StrPtr(DefaultHomeDir),
+		NomadHost:		StrPtr(DefaultNomadHost),
+		NomadToken:		StrPtr(DefaultNomadHost),
+		SkipVerify:		BoolPtr(DefaultSkipVerify),
 	}
 	return f
 }

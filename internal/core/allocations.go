@@ -83,7 +83,7 @@ func (a *Allocations) GetAllocationData(id string) (models.Allocations, bool) {
 }
 
 func (a *Allocations) HandleButtonResponse(index int, label string) {
-	if index == 0 && label == "Yes" {
+	if index == 0 && label == "Restart" {
 		Allocations, Ok := a.GetAllocationData(a.SelectedValue["id"])
 		if Ok {
 			a.App.Alert.Loader(true)
@@ -92,7 +92,7 @@ func (a *Allocations) HandleButtonResponse(index int, label string) {
 				Namespace:	a.App.Config.GetNamespace(),
 			}
 			if Err := a.App.NomadClient.Restart(Allocations.ID, Allocations.TaskName, Params); Err != nil {
-				a.App.Alert.Loader(true)
+				a.App.Alert.Loader(false)
 				a.App.Alert.Error(Err.Error())
 			} else {
 				a.App.Alert.Loader(false)
@@ -114,7 +114,7 @@ func (a *Allocations) InitRestartModal() {
 	Title := fmt.Sprintf("Are you sure to restart %s/%s?", a.SelectedValue["id"], a.SelectedValue["name"])
 	ConfirmModal.SetTitle(Title)
 	ConfirmModal.SetData(a.SelectedValue)
-	ConfirmModal.AddButtons([]string{"Yes", "No"})
+	ConfirmModal.AddButtons([]string{"Restart", "Cancel"})
 	ConfirmModal.SetResponseFunc(a.HandleButtonResponse)
 	a.App.Layout.OpenPage("modal", true)
 }

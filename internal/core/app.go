@@ -86,7 +86,7 @@ func BindAppKeys(app *App) {
 			}
 			break
 		case utils.NtuiCtrlTKey.Key:
-			if app.Layout.GetActivePage() == "allocations" {
+			if app.Layout.GetActivePage() == "allocations" || app.Layout.GetActivePage() == "tasks" {
 				app.Primitives.Allocations.InitRestartModal()
 			}
 			break
