@@ -8,7 +8,13 @@ This is an unofficial open source terminal GUI tool to manage your [Hashicorp No
 Coming Soon...
 
 ## Installations:
-Coming Soon...
+Currently `ntui` is only available to install through source code. 
+
+### Install By Source Code:
+1. Clone this git repository.
+2. Run setup script using `bash ./setup.sh`. It will setup a home directory(`.ntui`) with configs. Make sure to set all the configurations inside `config.json`
+3. Run build script using `bash ./build.sh`. It will build the code in local system.
+4. Run it using `./bin/ntui`. More options can be viewed using `./bin/ntui --help`  
 
 ## How To Use It:
 Coming Soon...
