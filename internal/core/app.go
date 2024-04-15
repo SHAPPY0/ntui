@@ -1,7 +1,7 @@
 package core
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/gdamore/tcell/v2"
 	"github.com/shappy0/ntui/internal/nomad"
 	"github.com/shappy0/ntui/internal/utils"
@@ -14,6 +14,7 @@ type App struct {
 	NomadClient 	*nomad.Nomad
 	Primitives		PrimitivesX
 	Alert 			*utils.Alert
+	Logger 			*utils.Logger
 }
 
 type PrimitivesX struct {
@@ -30,16 +31,16 @@ type PrimitivesX struct {
 	Modal 			*Modal
 }
 
-func NewApp(config *Config) (*App, error) {
+func NewApp(config *Config, logger *utils.Logger) (*App, error) {
 	a := &App{
 		Version:		"1.0",
 		Config:			config,
 		Layout:			NewLayout(),
 		Alert:			utils.NewAlert(),
+		Logger:			logger,
 	}
-	NomadClient, Err :=	nomad.New()
+	NomadClient, Err :=	nomad.New(a.Logger)
 	if Err != nil {
-		fmt.Println("Error")
 		return a, Err
 	}
 	a.NomadClient = NomadClient
@@ -47,6 +48,7 @@ func NewApp(config *Config) (*App, error) {
 }
 
 func (app *App) Init() error {
+	app.Logger.Info("Initializing ntui app ...")
 	app.Primitives = PrimitivesX{
 		Regions:		NewRegions(app),
 		Namespaces:		NewNamespaces(app),
@@ -70,19 +72,18 @@ func BindAppKeys(app *App) {
 	app.Layout.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case utils.NtuiExitKey.Key:
+			app.Logger.Info("Stopping Ntui ...")
 			app.StopX()
 			break
 		case utils.NtuiEscKey.Key:
 			app.Layout.GoBack()
 			break
 		case utils.NtuiCtrlRKey.Key:
-			if app.Layout.GetActivePage() == "jobs" {
-				app.Layout.OpenPage("main", false)
-			}
+			app.Layout.OpenPage("main", false)
 			break
 		case utils.NtuiCtrlVKey.Key:
-			if app.Layout.GetActivePage() == "taskgroups" {
-				app.Layout.OpenPage("versions", true)
+			if app.Layout.GetActivePage() == "versions" {
+				app.Primitives.Versions.ConfirmModal()
 			}
 			break
 		case utils.NtuiCtrlTKey.Key:
@@ -92,6 +93,11 @@ func BindAppKeys(app *App) {
 			break
 		case utils.NtuiRuneKey.Key:
 			switch event.Rune() {
+			case 'v':
+				if app.Layout.GetActivePage() == "taskgroups" {
+					app.Layout.OpenPage("versions", true)
+				}
+				break
 			case 'l':
 				if app.Layout.GetActivePage() == "tasks" {
 					app.Layout.OpenPage("log", true)

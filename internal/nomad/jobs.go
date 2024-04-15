@@ -15,6 +15,8 @@ type JobClient interface {
 	Summary(string, *api.QueryOptions) (*api.JobSummary, *api.QueryMeta, error)
 	Allocations(string, bool, *api.QueryOptions) ([]*api.AllocationListStub, *api.QueryMeta, error)
 	Versions(string, bool, *api.QueryOptions) ([]*api.Job, []*api.JobDiff, *api.QueryMeta, error)
+	Submission(string, int, *api.QueryOptions) (*api.JobSubmission, *api.QueryMeta, error)
+	Revert(string, uint64, *uint64, *api.WriteOptions, string, string) (*api.JobRegisterResponse, *api.WriteMeta, error)
 	Deregister(string, bool, *api.WriteOptions) (string, *api.WriteMeta, error)
 	Register(*api.Job, *api.WriteOptions) (*api.JobRegisterResponse, *api.WriteMeta, error)
 }
@@ -122,4 +124,13 @@ func (n *Nomad) Versions(jobId string, params *models.NomadParams) ([]models.Job
 		JobVersionDiff = append(JobVersionDiff, Jvd)
 	}
 	return JobVersions, JobVersionDiff, nil 
+}
+
+func (n *Nomad) Revert(jobId string, version uint64, params *models.NomadParams) (error) {
+	revertResp, _, err := n.JobClient.Revert(jobId, version, nil, nil, "", "")
+	if err != nil {
+		n.Logger.Error("Version reverted error " + jobId + " #" + utils.IntToStr(int(version)) + " " + err.Error())
+	}
+	n.Logger.Info("Version reverted successful " + jobId + " #" + utils.IntToStr(int(version)) + " " + utils.Stringify(revertResp))
+	return err
 }

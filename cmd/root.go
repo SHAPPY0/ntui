@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"github.com/spf13/cobra"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	// "github.com/rs/zerolog"
+	// "github.com/rs/zerolog/log"
 	"github.com/shappy0/ntui/internal/core"
+	"github.com/shappy0/ntui/internal/utils"
 )
 
 var (
@@ -19,7 +21,6 @@ var (
 )
 
 func Run() {
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	rootCmd.AddCommand(
 		versionCmd(),
 		configCmd(),
@@ -30,120 +31,151 @@ func Run() {
 	}
 }
 
-func ParseCmdParams(cmd *cobra.Command, params *core.CmdParams) *core.CmdParams {
+func ParseFlags(cmd *cobra.Command, flags *core.Flags) *core.Flags {
 	CustomConfigPath, Err := cmd.Flags().GetString("config-path")
 	if Err != nil {
 		panic(Err)
 	}
-	params.ConfigPath = CustomConfigPath
+	flags.ConfigPath = CustomConfigPath
 
 	RefreshRate, Err := cmd.Flags().GetInt("refresh")
 	if Err != nil {
 		panic(Err)
 	}
-	params.RefreshRate = RefreshRate
+	flags.RefreshRate = RefreshRate
 
 	HomeDir, Err := cmd.Flags().GetString("home-dir")
 	if Err != nil {
 		panic(Err)
 	}
-	params.HomeDir = HomeDir
+	flags.HomeDir = HomeDir
 
 	LogLevel, Err := cmd.Flags().GetString("log-level")
 	if Err != nil {
 		panic(Err)
 	}
-	params.LogLevel = LogLevel
+	flags.LogLevel = LogLevel
 
 	Namespace, Err := cmd.Flags().GetString("namespace")
 	if Err != nil {
 		panic(Err)
 	}
-	params.Namespace = Namespace
+	flags.Namespace = Namespace
 
 	Region, Err := cmd.Flags().GetString("region")
 	if Err != nil {
 		panic(Err)
 	}
-	params.Region = Region
+	flags.Region = Region
 
 	SkipVerify, Err := cmd.Flags().GetBool("skip-verify")
 	if Err != nil {
 		panic(Err)
 	}
-	params.SkipVerify = SkipVerify
+	flags.SkipVerify = SkipVerify
 
 	Token, Err := cmd.Flags().GetString("token")
 	if Err != nil {
 		panic(Err)
 	}
-	params.Token = Token
+	flags.Token = Token
 
-	return params
+	return flags
 }
 
 func Init(cmd *cobra.Command, args []string) error {
-	var Params core.CmdParams
-	ParseCmdParams(cmd, &Params)
-	Config, Err := core.NewConfig().Load(Params)
+	var flags core.Flags
+	ParseFlags(cmd, &flags)
+
+	Config, Err := core.NewConfig().Load(flags)
 	if Err != nil {
 		return fmt.Errorf("Unable to load config file")
-	}	
-	App, Err := core.NewApp(Config)
-	if Err != nil {
-		return Err
 	}
-	if Err := App.Init(); Err != nil {
-		return Err
+	
+	if err := utils.EnsureDirPath(Config.LogDir + core.DefaultLogFile, utils.DefaultDirMod); err != nil {
+		return err
 	}
-	log.Info().Msg("Starting NTUI")
-	App.RunX()
+
+	logFile, err := os.OpenFile(Config.LogDir + core.DefaultLogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, utils.DefaultFileMod)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if logFile != nil {
+			_ = logFile.Close()
+		}
+	}()
+	
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Printf("%v.\n", err)
+		}
+	}()
+
+	var logger = utils.NewLogger(Config.LogLevel, logFile)
+
+	app, err := core.NewApp(Config, logger)
+	if err != nil {
+		return err
+	}
+
+	if err := app.Init(); err != nil {
+		logger.Error(err.Error())
+		return err
+	}
+	
+	logger.Info("Starting ntui ...")
+	
+	app.RunX()
+	
 	return nil
 }
 
 func InitFlags() {
 	flags := NewFlags()
+
 	rootCmd.Flags().StringVarP(
 		flags.LogLevel,
 		"log-level", "l",
 		DefaultLogLevel,
-		"Specify Log Level",
+		"Set Log Level (info, warning, error)",
 	)
 	rootCmd.Flags().IntVarP(
 		flags.RefreshRate,
 		"refresh", "r",
 		DefaultRefreshRate,
-		"Specify the default refresh rate as integer[sec]",
+		"Set the default refresh rate as integer[sec]",
 	)
 	rootCmd.Flags().StringVarP(
 		flags.ConfigPath,
 		"config-path", "c",
-		"",
-		"Specify the config file path",
+		DefaultConfigPath,
+		"Set the config file path",
 	)
 	rootCmd.Flags().StringVarP(
 		flags.HomeDir,
 		"home-dir", "",
 		DefaultHomeDir,
-		"Specify the home dir of ntui app",
+		"Set the home dir of ntui app",
 	)
 	rootCmd.Flags().StringVarP(
 		flags.Region,
 		"region", "",
 		DefaultRegion,
-		"Specify default Nomad Region",
+		"Set default Nomad Region",
 	)
 	rootCmd.Flags().StringVarP(
 		flags.Namespace,
 		"namespace", "n",
 		DefaultNamespace,
-		"Specify default Nomad Namespace",
+		"Set default Nomad Namespace",
 	)
 	rootCmd.Flags().StringVarP(
 		flags.NomadHost,
 		"host", "",
 		DefaultNomadHost,
-		"Specify Nomad Host",
+		"Set Nomad Host",
 	)
 	rootCmd.Flags().StringVarP(
 		flags.NomadToken,

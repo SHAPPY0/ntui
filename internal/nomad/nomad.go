@@ -1,8 +1,9 @@
 package nomad
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/hashicorp/nomad/api"
+	"github.com/shappy0/ntui/internal/utils"
 )
 
 type Nomad struct {
@@ -13,20 +14,22 @@ type Nomad struct {
 	AllocationClient 	AllocationClient
 	AllocationFSClient 	AllocationFSClient
 	Namespace 			string
+	Logger 				*utils.Logger	
 }
 
-func New() (*Nomad, error) {
-	Nomad := &Nomad{}
-	Client, Err := api.NewClient(api.DefaultConfig())
-	if Err != nil {
-		fmt.Println("Error while creating nomad client ", Err)
-		return Nomad, Err
+func New(logger *utils.Logger) (*Nomad, error) {
+	n := &Nomad{
+		Logger:		logger,
 	}
-	Nomad.Client = Client
-	Nomad.RegionClient = Nomad.Client.Regions()
-	Nomad.NamespaceClient = Nomad.Client.Namespaces()
-	Nomad.JobClient = Nomad.Client.Jobs()
-	Nomad.AllocationClient = Nomad.Client.Allocations()
-	Nomad.AllocationFSClient = Nomad.Client.AllocFS()
-	return Nomad, nil
+	client, err := api.NewClient(api.DefaultConfig())
+	if err != nil {
+		panic("Error connecting nomad client: " + err.Error())
+	}
+	n.Client = client
+	n.RegionClient = n.Client.Regions()
+	n.NamespaceClient = n.Client.Namespaces()
+	n.JobClient = n.Client.Jobs()
+	n.AllocationClient = n.Client.Allocations()
+	n.AllocationFSClient = n.Client.AllocFS()
+	return n, nil
 }

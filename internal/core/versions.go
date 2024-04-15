@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/utils"
 	"github.com/shappy0/ntui/internal/models"
@@ -64,4 +65,38 @@ func (v *Versions) UpdateTable() {
 			v.UpdateTableData(v.JobId, JobVersions, Diffs)
 		}
 	}
+}
+
+func (v *Versions) ConfirmModal() {
+	v.SelectedValue = v.GetSelectedItem()
+	if v.SelectedValue["revertable"] == "Yes" {
+		confirmModal := v.App.Primitives.Modal
+		title := fmt.Sprintf("Are you sure to revert version %s%s?", v.JobId, v.SelectedValue["version"])
+		confirmModal.SetTitle(title)
+		confirmModal.SetData(v.SelectedValue)
+		confirmModal.AddButtons([]string{"Revert", "Cancel"})
+		confirmModal.SetResponseFunc(v.HandleButtonResponse)
+		v.App.Layout.OpenPage("modal", true)
+	}
+}
+
+func (v *Versions) HandleButtonResponse(index int, label string) {
+	if index == 0 && label == "Revert" {
+		Params := &models.NomadParams{
+			Region:		v.App.Config.GetRegion(),
+			Namespace:	v.App.Config.GetNamespace(),
+		}
+		v.App.Alert.Loader(true)
+		verNum := utils.Split(v.SelectedValue["version"], "#")
+		version := utils.IntToUint64(utils.StrToInt(verNum[1]))
+		if err := v.App.NomadClient.Revert(v.JobId, version, Params); err != nil {
+			v.App.Alert.Loader(false)
+			v.App.Alert.Error(err.Error())
+		} else {
+			v.App.Alert.Loader(false)
+		    msg := fmt.Sprintf("Version %s %s reverted successful...", v.JobId, v.SelectedValue["version"])
+		    v.App.Alert.Info(msg)
+		}
+	}
+	v.App.Layout.GoBack()
 }

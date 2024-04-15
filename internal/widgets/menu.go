@@ -58,12 +58,12 @@ var (
 	}
 	VersionMenu = Item{
 		Name:		"versions",
-		Icon:		"ctrl+v",
+		Icon:		"v",
 		Description: "Show Job Versions",
 	}
 	RevertMenu = Item{
 		Name:		"revert_version",
-		Icon:		"ctrl+r",
+		Icon:		"ctrl+v",
 		Description: "Revert Version",
 	}
 	RestartTaskMenu = Item{

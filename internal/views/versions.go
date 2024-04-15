@@ -21,7 +21,7 @@ func NewVersions() *Versions {
 	v := &Versions{
 		Table:			widgets.NewTable(TitleVersions),
 		Title:			TitleVersions,
-		Headers:		[]string{"version", "stable", "submitted", "changes"},
+		Headers:		[]string{"version", "stable", "submitted", "changes", "revertable"},
 	}
 	v.Table.Headers = v.Headers
 	v.Table.DrawHeader()
@@ -54,6 +54,8 @@ func (v *Versions) UpdateTableData(jobId string, jobVersions []models.JobVersion
 	v.Data = jobVersions
 	v.SetTableTitle(len(v.Data), jobId, "")
 	v.Table.ClearTable()
+	latestVersion := -1
+
 	for I := 0; I <len(v.Data); I++ {
 		RowTextColor := tcell.ColorWhite
 		v.Table.DrawCell(I + 1, 0, "#" + utils.IntToStr(int(v.Data[I].Version)), RowTextColor)
@@ -72,5 +74,12 @@ func (v *Versions) UpdateTableData(jobId string, jobVersions []models.JobVersion
 			Changes = utils.IntToStr(ChangeCount) + " Changes"
 		}
 		v.Table.DrawCell(I + 1, 3, Changes, RowTextColor)
+		
+		revertable := "Yes"
+		if latestVersion < int(v.Data[I].Version) {
+			revertable = "No"
+			latestVersion = int(v.Data[I].Version)
+		}
+		v.Table.DrawCell(I + 1, 4, revertable, RowTextColor)
 	}
 }

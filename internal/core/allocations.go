@@ -63,6 +63,7 @@ func (a *Allocations) OnFocus() {
 }
 
 func (a *Allocations) OnBlur() {
+	a.App.Layout.Header.Menu.Remove(widgets.RestartTaskMenu)
 	go a.Listener.Stop()
 }
 

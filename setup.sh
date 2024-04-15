@@ -10,6 +10,7 @@ config_data='{
     "Home_Dir": "",
     "Config_Path": "",
     "Log_Level": "info",
+    "Log_Dir": "",
     "Refresh_Rate": 5, 
     "Nomad_Server_Base_Url": "",
     "Nomad_Http_Auth": "",

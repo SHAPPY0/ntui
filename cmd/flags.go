@@ -1,12 +1,20 @@
 package cmd
 
-const (
+import (
+	"os"
+)
+
+var (
+	AppName = "ntui"
+	DefaultConfigDir = "." + AppName
+	DefaultConfigFile = "config.json"
+	userHomeDir, _ = os.UserHomeDir()
 	DefaultRefreshRate = 5
 	DefaultLogLevel = "info"
-	DefaultConfigPath = ""
+	DefaultConfigPath = userHomeDir + "/" + DefaultConfigDir + "/" + DefaultConfigFile
 	DefaultRegion = ""
 	DefaultNamespace = ""
-	DefaultHomeDir = ""
+	DefaultHomeDir = userHomeDir + "/" + DefaultConfigDir
 	DefaultNomadHost = ""
 	DefaultNomadToken = ""
 	DefaultSkipVerify = false
@@ -34,7 +42,7 @@ func NewFlags() *Flags {
 		Namespace:		StrPtr(DefaultNamespace),
 		HomeDir:		StrPtr(DefaultHomeDir),
 		NomadHost:		StrPtr(DefaultNomadHost),
-		NomadToken:		StrPtr(DefaultNomadHost),
+		NomadToken:		StrPtr(DefaultNomadToken),
 		SkipVerify:		BoolPtr(DefaultSkipVerify),
 	}
 	return f

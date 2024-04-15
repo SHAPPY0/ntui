@@ -14,6 +14,8 @@ const (
 	LongDesc = "Ntui is a CLI to view and manage your Hashicorp Nomad Clusters."
 	DefaultConfigDir = "." + AppName
 	DefaultConfigFile = "config.json"
+	DefaultLogDir = "logs"
+	DefaultLogFile = "/ntui.log"
 )
 
 var EnvVars = map[string]string{
@@ -22,7 +24,7 @@ var EnvVars = map[string]string{
 	"NOMAD_TOKEN": "NomadToken",
 }
 
-type CmdParams struct {
+type Flags struct {
 	ConfigPath		string
 	RefreshRate		int
 	HomeDir			string
@@ -38,6 +40,7 @@ type Config struct {
 	AppName			string 		`json:"App_Name"`
 	HomeDir 		string 		`json:"Home_Dir"`
 	LogLevel 		string		`json:"Log_Level"`
+	LogDir 			string		`json:"Log_Dir"`
 	RefreshRate 	int			`json:"Refresh_Rate"`
 	NomadBaseUrl	string		`json:"Nomad_Server_Base_Url"`
 	NomadHttpAuth	string		`json:"Nomad_Http_Auth"`
@@ -85,63 +88,62 @@ func GetValue(c *Config, key string) string {
 	return string(f.String())
 }
 
-func SetConfigValues(c *Config, params CmdParams) {
-	if params.HomeDir != "" {
-		c.HomeDir = params.HomeDir
-	} else {
-		HomeDir, _ := os.UserHomeDir()
-		c.HomeDir = HomeDir
+func SetConfigValues(c *Config, flags Flags) {
+	if c.HomeDir == "" {
+		c.HomeDir = flags.HomeDir
 	}
-	if params.RefreshRate > 0 {
-		c.RefreshRate = params.RefreshRate
+	if c.RefreshRate == 0 {
+		c.RefreshRate = flags.RefreshRate
 	}
-	if params.Host != "" {
-		c.NomadBaseUrl = params.Host
+	if flags.Host != "" {
+		c.NomadBaseUrl = flags.Host
 	}
-	if params.LogLevel != "" {
-		c.LogLevel = params.LogLevel
+	if c.LogLevel == "" {
+		c.LogLevel = flags.LogLevel
 	}
-	if params.Region != "" {
-		c.Region = params.Region
+	if c.HomeDir != "" && c.LogDir == "" {
+		c.LogDir = c.HomeDir + "/" + DefaultLogDir 
 	}
-	if params.Namespace != "" {
-		c.Namespace = params.Namespace
+	if flags.Region != "" {
+		c.Region = flags.Region
 	}
-	if params.Token != "" {
-		c.NomadToken = params.Token
+	if flags.Namespace != "" {
+		c.Namespace = flags.Namespace
 	}
-	if params.SkipVerify != false {
-		c.NomadSkipVerify = params.SkipVerify
+	if flags.Token != "" {
+		c.NomadToken = flags.Token
+	}
+	if flags.SkipVerify != false {
+		c.NomadSkipVerify = flags.SkipVerify
 	}
 }
 
-func (c *Config) Load(params CmdParams) (*Config, error) {
-	Config := c
-	ConfigPath := os.Getenv("CONFIG_PATH")
-	if params.ConfigPath != "" {
-		ConfigPath = params.ConfigPath
+func (c *Config) Load(flags Flags) (*Config, error) {
+	config := c
+	configPath := os.Getenv("CONFIG_PATH")
+	if flags.ConfigPath != "" {
+		configPath = flags.ConfigPath
 	}
-	if ConfigPath == "" {
-		HomeDir, _ := os.UserHomeDir()
-		ConfigPath = fmt.Sprintf("%s/%s/%s", HomeDir, DefaultConfigDir, DefaultConfigFile)
+	if configPath == "" {
+		homeDir, _ := os.UserHomeDir()
+		configPath = fmt.Sprintf("%s/%s/%s", homeDir, DefaultConfigDir, DefaultConfigFile)
 	}
-	if ConfigPath == "" {
+	if configPath == "" {
 		panic(fmt.Errorf("No config file found"))
 	}
 
-	ConfigJson, Err := ioutil.ReadFile(ConfigPath)
-	if Err != nil {
-		return Config, Err
+	configJson, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		return config, err
 	}
-	if Err = json.Unmarshal([]byte(ConfigJson), &Config); Err != nil {
-		return Config, Err
-	}
-
-	SetConfigValues(Config, params)
-
-	for Key, Value := range EnvVars {
-		os.Setenv(Key, GetValue(Config, Value))
+	if err = json.Unmarshal([]byte(configJson), &config); err != nil {
+		return config, err
 	}
 
-	return Config, nil
+	SetConfigValues(config, flags)
+	for key, value := range EnvVars {
+		os.Setenv(key, GetValue(config, value))
+	}
+
+	return config, nil
 }

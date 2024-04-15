@@ -29,11 +29,11 @@ func NewJobs(app *App) *Jobs {
 }
 
 func (j *Jobs) OnFocus() {
-	j.App.Layout.Header.Menu.Add(widgets.RegionNMenu, true)
+	// j.App.Layout.Header.Menu.Add(widgets.RegionNMenu, true)
 }
 
 func (j *Jobs) OnBlur() {
-	j.App.Layout.Header.Menu.Remove(widgets.RegionNMenu)
+	// j.App.Layout.Header.Menu.Remove(widgets.RegionNMenu)
 }
 
 func (j *Jobs) OnRowSelected(row, col int) {
@@ -59,7 +59,7 @@ func (j *Jobs) UpdateTable()  {
 			Region:	j.App.Config.GetRegion(),
 			Namespace:	j.App.Config.GetNamespace(),
 		}
-		j.UpdateMenu()
+		// j.UpdateMenu()
 		Data, _ := j.App.NomadClient.Jobs(Params)
 		j.UpdateTableData(Params, Data)
 	} else {

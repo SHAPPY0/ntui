@@ -108,7 +108,7 @@ func (t *Tasks) SetInfoView() {
 func (t *Tasks) SetUsageView() {
 	//Bottom Section
 	t.UsageView = tview.NewTextView()
-	t.UsageView.SetText("This place for usage")
+	t.UsageView.SetText("")
 	t.DetailsView.AddItemX(t.UsageView, 0, 1, false)
 }
 
