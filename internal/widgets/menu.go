@@ -71,6 +71,16 @@ var (
 		Icon:		"ctrl+t",
 		Description: "Restart Task",
 	}
+	StopJobMenu = Item{
+		Name:		"stop_job",
+		Icon:		"ctrl+q",
+		Description: "Stop Job",
+	}
+	StartJobMenu = Item{
+		Name:		"start_job",
+		Icon:		"ctrl+s",
+		Description: "Start Job",
+	}
 )
 
 func NewMenu() *Menu {
@@ -119,4 +129,10 @@ func (m *Menu) Remove(menu Item) {
 		}
 	}
 	m.Render()
+}
+
+func (m *Menu) Replace(item1 Item, item2 Item) {
+	m.Add(item2, false)
+	m.Remove(item1)
+	
 }

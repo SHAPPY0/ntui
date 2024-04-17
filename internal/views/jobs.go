@@ -35,6 +35,10 @@ func (j *Jobs) SetOnSelectFn(fn func(int, int)) {
 	j.Table.SetOnSelectFn(fn)
 }
 
+func (j *Jobs) SetOnSelectionChanged(fn func(int, int)) {
+	j.Table.SetSelectionChangedFunc(fn)
+}
+
 func (j *Jobs) SetOnTabPressFn(fn func()) {
 	j.Table.SetOnTabPressFn(fn)
 }

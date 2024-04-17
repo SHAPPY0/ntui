@@ -21,6 +21,7 @@ type JobClient interface {
 	Register(*api.Job, *api.WriteOptions) (*api.JobRegisterResponse, *api.WriteMeta, error)
 }
 
+//Get jobs list
 func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 	Result := make([]models.Jobs, 0)
 	Data, _, Err := n.JobClient.List(&api.QueryOptions{
@@ -57,6 +58,7 @@ func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 	return Result, nil
 }
 
+//Get TaskGroup list by jobId
 func (n *Nomad) TaskGroups(jobId, region, namespace string) ([]models.TaskGroups, error) {
 	Result := make([]models.TaskGroups, 0)
 	Data, _, Err := n.JobClient.Summary(jobId, &api.QueryOptions{
@@ -90,6 +92,7 @@ func (n *Nomad) TaskGroups(jobId, region, namespace string) ([]models.TaskGroups
 //TODO: Implement Later, Submission(Definitions) required current job version
 func (n *Nomad) Submission() {}
 
+//Get versions List by jobId
 func (n *Nomad) Versions(jobId string, params *models.NomadParams) ([]models.JobVersion, []models.JobVersionDiff, error) {
 	JobVersions := make([]models.JobVersion, 0)
 	JobVersionDiff := make([]models.JobVersionDiff, 0)
@@ -126,11 +129,57 @@ func (n *Nomad) Versions(jobId string, params *models.NomadParams) ([]models.Job
 	return JobVersions, JobVersionDiff, nil 
 }
 
+//Revert job by version
 func (n *Nomad) Revert(jobId string, version uint64, params *models.NomadParams) (error) {
 	revertResp, _, err := n.JobClient.Revert(jobId, version, nil, nil, "", "")
 	if err != nil {
-		n.Logger.Error("Version reverted error " + jobId + " #" + utils.IntToStr(int(version)) + " " + err.Error())
+		n.Logger.Error("Version " + jobId + " #" + utils.IntToStr(int(version)) + " revert failed  " + err.Error())
 	}
-	n.Logger.Info("Version reverted successful " + jobId + " #" + utils.IntToStr(int(version)) + " " + utils.Stringify(revertResp))
+	n.Logger.Info("Version " + jobId + " #" + utils.IntToStr(int(version)) + " reverted successful  " + utils.Stringify(revertResp))
 	return err
+}
+
+//Deregister job
+func (n *Nomad) Deregister(jobId string, purge bool, params *models.NomadParams) error {
+	if jobId == "" {
+		n.Logger.Error("Invalid jobId to stop job")
+		return fmt.Errorf("Invalid jobId to stop job")
+	}
+	resp, _, err := n.JobClient.Deregister(jobId, purge, nil)
+	if err != nil {
+		n.Logger.Error("Job " + jobId + "stop failed: " + err.Error())
+		return err
+	}
+	n.Logger.Info("Job " + jobId + " stopped successfully: " + resp)
+	return nil
+
+}
+
+func (n *Nomad) GetJob(jobId string) (*api.Job, error) {
+	job, _, err := n.JobClient.Info(jobId, nil)
+	if err != nil {
+		return nil, err
+	}
+	return job, nil
+}
+
+//Register Job
+func (n *Nomad) Register(jobId string, params *models.NomadParams) error {
+	if jobId == "" {
+		n.Logger.Error("Invalid jobId to start job")
+		return fmt.Errorf("Invalid jobId to start job")
+	}
+	job, err := n.GetJob(jobId)
+	if err != nil {
+		n.Logger.Error("Error getting job " + jobId + " info to start job: " + err.Error())
+		return err
+	}
+	n.Logger.Info(utils.Stringify(&api.Job{Name: &jobId, Region: &params.Region, Namespace: &params.Namespace}))
+	resp, _, err := n.JobClient.Register(job, &api.WriteOptions{Region: params.Region, Namespace: params.Namespace})
+	if err != nil {
+		n.Logger.Error("Job " + jobId + "start failed: " + err.Error())
+		return err
+	}
+	n.Logger.Info("Job " + jobId + " started successfully: " + utils.Stringify(resp))
+	return nil
 }

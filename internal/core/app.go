@@ -91,6 +91,16 @@ func BindAppKeys(app *App) {
 				app.Primitives.Allocations.InitRestartModal()
 			}
 			break
+		case utils.NtuiCtrlQKey.Key:
+			if app.Layout.GetActivePage() == "jobs" {
+				app.Primitives.Jobs.StopModal()
+			}
+			break
+		case utils.NtuiCtrlSKey.Key:
+			if app.Layout.GetActivePage() == "jobs" {
+				app.Primitives.Jobs.StartModal()
+			}
+			break
 		case utils.NtuiRuneKey.Key:
 			switch event.Rune() {
 			case 'v':

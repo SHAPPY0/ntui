@@ -75,12 +75,12 @@ func (v *Versions) ConfirmModal() {
 		confirmModal.SetTitle(title)
 		confirmModal.SetData(v.SelectedValue)
 		confirmModal.AddButtons([]string{"Revert", "Cancel"})
-		confirmModal.SetResponseFunc(v.HandleButtonResponse)
+		confirmModal.SetResponseFunc(v.HandleModalResponse)
 		v.App.Layout.OpenPage("modal", true)
 	}
 }
 
-func (v *Versions) HandleButtonResponse(index int, label string) {
+func (v *Versions) HandleModalResponse(index int, label string) {
 	if index == 0 && label == "Revert" {
 		Params := &models.NomadParams{
 			Region:		v.App.Config.GetRegion(),

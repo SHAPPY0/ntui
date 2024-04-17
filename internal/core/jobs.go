@@ -23,17 +23,20 @@ func NewJobs(app *App) *Jobs {
 	j.App.Layout.Body.AddPageX(j.GetTitle(), j, true, false)
 	j.Listener = utils.NewListener(j.Refresher)
 	j.SetOnSelectFn(j.OnRowSelected)
+	j.SetOnSelectionChanged(j.OnSelectionChanged)
 	j.SetFocusFunc(j.OnFocus)
 	j.SetBlurFunc(j.OnBlur)
 	return j
 }
 
 func (j *Jobs) OnFocus() {
-	// j.App.Layout.Header.Menu.Add(widgets.RegionNMenu, true)
+	j.App.Layout.Header.Menu.Add(widgets.StopJobMenu, true)
+	go j.Listener.Listen()
 }
 
 func (j *Jobs) OnBlur() {
-	// j.App.Layout.Header.Menu.Remove(widgets.RegionNMenu)
+	j.App.Layout.Header.Menu.Remove(widgets.StopJobMenu)
+	go j.Listener.Stop()
 }
 
 func (j *Jobs) OnRowSelected(row, col int) {
@@ -47,6 +50,15 @@ func (j *Jobs) OnRowSelected(row, col int) {
 			j.App.Layout.OpenPage("taskgroups", true)
 		})
 	}()
+}
+
+func (j *Jobs) OnSelectionChanged(row, col int) {
+	selectedRow := j.GetSelectedItem()
+	if selectedRow["status"] == "Dead" {
+		j.App.Layout.Header.Menu.Replace(widgets.StopJobMenu, widgets.StartJobMenu)
+	} else {
+		j.App.Layout.Header.Menu.Replace(widgets.StartJobMenu, widgets.StopJobMenu)
+	}
 }
 
 func (j *Jobs) UpdateMenu() {
@@ -70,4 +82,64 @@ func (j *Jobs) UpdateTable()  {
 func (j *Jobs) Refresher() {
 	j.UpdateTable()
 	j.App.Layout.Draw()
+}
+
+func (j *Jobs) StopModal() {
+	j.SelectedValue = j.GetSelectedItem()
+	confirmModal := j.App.Primitives.Modal
+	title := fmt.Sprintf("Are you sure to stop job %s?", j.SelectedValue["name"])
+	confirmModal.SetTitle(title)
+	confirmModal.SetData(j.SelectedValue)
+	confirmModal.AddButtons([]string{"Stop", "Cancel"})
+	confirmModal.SetResponseFunc(j.HandleStopModalResponse)
+	j.App.Layout.OpenPage("modal", true)
+}
+
+func (j *Jobs) HandleStopModalResponse(index int, label string) {
+	if index == 0 && label == "Stop" {
+		params := &models.NomadParams{
+			Region:		j.App.Config.GetRegion(),
+			Namespace:	j.App.Config.GetNamespace(),
+		}
+		j.App.Alert.Loader(true)
+		if err := j.App.NomadClient.Deregister(j.SelectedValue["name"], false, params); err != nil {
+			j.App.Alert.Loader(false)
+			j.App.Alert.Error(err.Error())
+		} else {
+			j.App.Alert.Loader(false)
+		    msg := fmt.Sprintf("Job %s stopped successfully...", j.SelectedValue["name"])
+		    j.App.Alert.Info(msg)
+		}
+	}
+	j.App.Layout.GoBack()
+}
+
+func (j *Jobs) StartModal() {
+	j.SelectedValue = j.GetSelectedItem()
+	confirmModal := j.App.Primitives.Modal
+	title := fmt.Sprintf("Are you sure to start job %s?", j.SelectedValue["name"])
+	confirmModal.SetTitle(title)
+	confirmModal.SetData(j.SelectedValue)
+	confirmModal.AddButtons([]string{"Start", "Cancel"})
+	confirmModal.SetResponseFunc(j.HandleStartpModalResponse)
+	j.App.Layout.OpenPage("modal", true)
+}
+
+func (j *Jobs) HandleStartpModalResponse(index int, label string) {
+	if index == 0 && label == "Start" {
+		params := &models.NomadParams{
+			Region:		j.App.Config.GetRegion(),
+			Namespace:	j.App.Config.GetNamespace(),
+		}
+		j.App.Alert.Loader(true)
+		if err := j.App.NomadClient.Register(j.SelectedValue["name"], params); err != nil {
+			j.App.Alert.Loader(false)
+			j.App.Alert.Error(err.Error())
+		} else {
+			j.App.Alert.Loader(false)
+		    msg := fmt.Sprintf("Job %s started successfully...", j.SelectedValue["name"])
+		    j.App.Alert.Info(msg)
+		}
+	}
+	j.App.Layout.GoBack()
 }

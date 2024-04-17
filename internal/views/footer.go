@@ -22,15 +22,17 @@ func NewFooter() *Footer {
 		Grid3:	widgets.NewTextView(""),
 	}
 	f.SetBorder(false)
+
 	//Footer Grid 1
 	f.Grid1.SetBorder(false)
+	
 	//Footer Grid 2
 	f.Grid2.SetBorder(false)
 	f.Grid2.SetDynamicColors(true)
 	f.Grid2.SetTextAlignX("AlignCenter")
 
 	//Footer Grid 3
-	f.SetBorder(false)
+	f.Grid3.SetBorder(false)
 
 	f.AddItemX(f.Grid1, 0, 1, false)
 	f.AddItemX(f.Grid2, 0, 1, false)

@@ -39,13 +39,23 @@ var (
 	}
 	NtuiRuneKey = NtuiKey{
 		Key:			tcell.KeyRune,
-		KeyLabel:		"L",
-		KeyDescription: "To  Open Log",
+		KeyLabel:		"rune keys",
+		KeyDescription: "Rune keys",
 	}
 	NtuiCtrlTKey = NtuiKey{
 		Key:			tcell.KeyCtrlT,
-		KeyLabel:		"Ctrl + t",
+		KeyLabel:		"ctrl + t",
 		KeyDescription: "Control and T",
+	}
+	NtuiCtrlQKey = NtuiKey{
+		Key:			tcell.KeyCtrlQ,
+		KeyLabel:		"ctrl + q",
+		KeyDescription: "Control and Q",
+	}
+	NtuiCtrlSKey = NtuiKey{
+		Key:			tcell.KeyCtrlS,
+		KeyLabel:		"ctrl + s",
+		KeyDescription: "Control and S",
 	}
 )
 
