@@ -5,7 +5,7 @@ import (
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/utils"
 	"github.com/shappy0/ntui/internal/models"
-	"github.com/shappy0/ntui/internal/widgets"
+	// "github.com/shappy0/ntui/internal/widgets"
 )
 
 type Versions struct {
@@ -30,12 +30,12 @@ func NewVersions(app *App) *Versions {
 }
 
 func (v *Versions) OnFocus() {
-	v.App.Layout.Header.Menu.Add(widgets.RevertMenu, true)
+	v.App.Layout.Header.Menu.RenderMenu(v.Menus)
 	v.UpdateTable()
 }
 
 func (v *Versions) OnBlur() {
-	v.App.Layout.Header.Menu.Remove(widgets.RevertMenu)
+	v.App.Layout.Header.Menu.RemoveMenus(v.Menus)
 }
 
 func (v *Versions) OnRowSelected(row, col int) {
@@ -58,7 +58,7 @@ func (v *Versions) UpdateTable() {
 			v.JobId = JobID
 			Params := &models.NomadParams{
 				Region:		v.App.Config.GetRegion(),
-				Namespace:		v.App.Config.GetNamespace(),
+				Namespace:	v.App.Config.GetNamespace(),
 			}
 			JobVersions, Diffs, _ := v.App.NomadClient.Versions(v.JobId, Params)
 			v.Diffs = Diffs

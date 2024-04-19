@@ -9,6 +9,7 @@ type MapView struct {
 	*tview.Table
 	Keys		[]string
 	Values		[]string
+	Size 		int
 }
 
 
@@ -22,6 +23,7 @@ func NewMapView() *MapView {
 
 func (mv *MapView) SetMapKeys(keys []string) {
 	mv.Keys = keys
+	mv.Size += 1 
 }
 
 func (mv *MapView) SetMapValues(values []string) {
@@ -31,6 +33,7 @@ func (mv *MapView) SetMapValues(values []string) {
 func (mv *MapView) SetMapKeyValue(key, value string) {
 	mv.Keys = append(mv.Keys, key)
 	mv.Values = append(mv.Values, value)
+	mv.Size += 1
 }
 
 func (mv *MapView) DrawMapView() {
@@ -58,4 +61,5 @@ func (mv *MapView) Clear() {
 	mv.Table.Clear()
 	mv.Keys = make([]string, 0)
 	mv.Values = make([]string, 0)
+	mv.Size = 0
 }

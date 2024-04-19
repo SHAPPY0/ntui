@@ -39,14 +39,30 @@ func (l *Logger) Info(message string) {
 	l.LInfo.Println(message)
 }
 
+func (l *Logger) Infof(format string, v ...any) {
+	l.LInfo.Printf(format, v...)
+}
+
 func (l *Logger) Warn(message string) {
 	l.LWarning.Println(message)
+}
+
+func (l *Logger) Warnf(format string, v ...any) {
+	l.LWarning.Printf(format, v...)
 }
 
 func (l *Logger) Warning(message string) {
 	l.LWarning.Println(message)
 }
 
+func (l *Logger) Warningf(format string, v ...any) {
+	l.LWarning.Printf(format, v...)
+}
+
 func (l *Logger) Error(message string) {
 	l.LError.Println(message)
+}
+
+func (l *Logger) Errorf(format string, v ...any) {
+	l.LError.Printf(format, v...)
 }

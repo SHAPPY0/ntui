@@ -3,7 +3,7 @@ package core
 import (
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/utils"
-	"github.com/shappy0/ntui/internal/widgets"
+	// "github.com/shappy0/ntui/internal/widgets"
 )
 
 type TaskGroups struct {
@@ -28,12 +28,12 @@ func NewTaskGroups(app *App) *TaskGroups {
 }
 
 func (tg *TaskGroups) OnFocus() {
-	tg.App.Layout.Header.Menu.Add(widgets.VersionMenu,  true)
+	tg.App.Layout.Header.Menu.RenderMenu(tg.Menus)
 	go tg.Listener.Listen()
 }
 
 func (tg *TaskGroups) OnBlur() {
-	tg.App.Layout.Header.Menu.Remove(widgets.VersionMenu)
+	tg.App.Layout.Header.Menu.RemoveMenus(tg.Menus)
 	go tg.Listener.Stop()
 }
 

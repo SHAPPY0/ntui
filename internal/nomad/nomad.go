@@ -13,6 +13,8 @@ type Nomad struct {
 	JobClient 			JobClient
 	AllocationClient 	AllocationClient
 	AllocationFSClient 	AllocationFSClient
+	NodePoolsClient		NodePoolsClient
+	NodesClient 		NodesClient
 	Namespace 			string
 	Logger 				*utils.Logger	
 }
@@ -31,5 +33,7 @@ func New(logger *utils.Logger) (*Nomad, error) {
 	n.JobClient = n.Client.Jobs()
 	n.AllocationClient = n.Client.Allocations()
 	n.AllocationFSClient = n.Client.AllocFS()
+	n.NodePoolsClient = n.Client.NodePools()
+	n.NodesClient = n.Client.Nodes()
 	return n, nil
 }

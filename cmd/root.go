@@ -31,62 +31,10 @@ func Run() {
 	}
 }
 
-func ParseFlags(cmd *cobra.Command, flags *core.Flags) *core.Flags {
-	CustomConfigPath, Err := cmd.Flags().GetString("config-path")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.ConfigPath = CustomConfigPath
-
-	RefreshRate, Err := cmd.Flags().GetInt("refresh")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.RefreshRate = RefreshRate
-
-	HomeDir, Err := cmd.Flags().GetString("home-dir")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.HomeDir = HomeDir
-
-	LogLevel, Err := cmd.Flags().GetString("log-level")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.LogLevel = LogLevel
-
-	Namespace, Err := cmd.Flags().GetString("namespace")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.Namespace = Namespace
-
-	Region, Err := cmd.Flags().GetString("region")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.Region = Region
-
-	SkipVerify, Err := cmd.Flags().GetBool("skip-verify")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.SkipVerify = SkipVerify
-
-	Token, Err := cmd.Flags().GetString("token")
-	if Err != nil {
-		panic(Err)
-	}
-	flags.Token = Token
-
-	return flags
-}
-
 func Init(cmd *cobra.Command, args []string) error {
 	var flags core.Flags
-	ParseFlags(cmd, &flags)
-
+	flags.ParseCommand(cmd)
+	
 	Config, Err := core.NewConfig().Load(flags)
 	if Err != nil {
 		return fmt.Errorf("Unable to load config file")

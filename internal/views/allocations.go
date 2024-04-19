@@ -13,13 +13,19 @@ type Allocations struct {
 	Title 			string
 	Headers 		[]string
 	Data			[]models.Allocations
+	Menus 			[]widgets.Item
 }
+
+var AllocMenu = []widgets.Item{
+	widgets.RestartTaskMenu,
+}  
 
 func NewAllocations() *Allocations {
 	a := &Allocations{
 		Table:		widgets.NewTable(TitleAllocations),
 		Title:		TitleAllocations,
 		Headers:	[]string{"id", "name", "status", "version", "created", "modified", "client", "volumn", "cpu", "memory"},
+		Menus:		AllocMenu,
 	}
 	a.Table.Headers = a.Headers
 	a.Table.DrawHeader()

@@ -15,6 +15,11 @@ type Versions struct {
 	Title		string
 	Headers		[]string
 	Data		[]models.JobVersion
+	Menus 		[]widgets.Item
+}
+
+var VersionMenus = []widgets.Item{
+	widgets.RevertMenu,
 }
 
 func NewVersions() *Versions {
@@ -22,6 +27,7 @@ func NewVersions() *Versions {
 		Table:			widgets.NewTable(TitleVersions),
 		Title:			TitleVersions,
 		Headers:		[]string{"version", "stable", "submitted", "changes", "revertable"},
+		Menus:			VersionMenus,
 	}
 	v.Table.Headers = v.Headers
 	v.Table.DrawHeader()

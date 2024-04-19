@@ -205,3 +205,156 @@ type ObjectDiff struct {
 	Fields 			[]*FieldDiff
 	Objects			[]*ObjectDiff
 }
+
+type NodePools struct {
+	Name 			string
+	Description 	string
+	Meta 			map[string]string
+	// SchedulerConfig *NodePoolSchedulerConfig
+	CreateIndex 	uint64
+	ModifyIndex     uint64
+}
+
+// type NodePoolSchedulerConfig struct {
+// 	SchedulerAlogrithm 				*bool
+// 	MemoryOversubscriptionEnabled	*bool
+// }
+
+type Nodes struct {
+	Address               string
+	ID                    string
+	Attributes            map[string]string
+	Datacenter            string
+	Name                  string
+	NodeClass             string
+	NodePool              string
+	Version               string
+	Drain                 bool
+	SchedulingEligibility string
+	Status                string
+	StatusDescription     string
+	AllocsCount 		  int
+	Drivers               map[string]*DriverInfo
+	NodeResources         *NodeResources
+	ReservedResources     *NodeReservedResources
+	LastDrain             *DrainMetadata
+	CreateIndex           uint64
+	ModifyIndex           uint64
+}
+
+type DriverInfo struct {
+	Attributes        	map[string]string
+	Detected          	bool
+	Healthy           	bool
+	HealthDescription 	string
+	UpdateTime        	time.Time
+}
+
+type NodeResources struct {
+	Cpu      			NodeCpuResources
+	Memory   			NodeMemoryResources
+	Disk     			NodeDiskResources
+	Networks 			[]*NetworkResource
+	Devices  			[]*NodeDeviceResource
+	MinDynamicPort 		int
+	MaxDynamicPort 		int
+}
+
+type NodeCpuResources struct {
+	CpuShares          int64
+	TotalCpuCores      uint16
+	ReservableCpuCores []uint16
+}
+
+type NodeMemoryResources struct {
+	MemoryMB int64
+}
+
+type NodeDiskResources struct {
+	DiskMB int64
+}
+
+type NetworkResource struct {
+	Mode          	string
+	Device        	string
+	CIDR          	string
+	IP            	string
+	DNS           	*DNSConfig
+	ReservedPorts 	[]Port
+	DynamicPorts  	[]Port
+	Hostname      	string
+	MBits 			*int
+}
+
+type DNSConfig struct {
+	Servers  		[]string
+	Searches 		[]string
+	Options  		[]string
+}
+
+type Port struct {
+	Label       	string 
+	Value       	int     
+	To          	int
+	HostNetwork 	string
+}
+
+type NodeDeviceResource struct {
+	Vendor 			string
+	Type 			string
+	Name 			string
+	Instances 		[]*NodeDevice
+	Attributes 		map[string]*Attribute
+}
+
+type NodeDevice struct {
+	ID 					string
+	Healthy 			bool
+	HealthDescription 	string
+	Locality 			*NodeDeviceLocality
+}
+
+type NodeDeviceLocality struct {
+	PciBusID 			string
+}
+
+type Attribute struct {
+	FloatVal 			*float64
+	IntVal 				*int64
+	StringVal 			*string
+	BoolVal		 		*bool
+	Unit 				string
+}
+
+type NodeReservedResources struct {
+	Cpu      			NodeReservedCpuResources
+	Memory   			NodeReservedMemoryResources
+	Disk     			NodeReservedDiskResources
+	Networks 			NodeReservedNetworkResources
+}
+
+type NodeReservedCpuResources struct {
+	CpuShares 			uint64
+}
+
+type NodeReservedMemoryResources struct {
+	MemoryMB 			uint64
+}
+
+type NodeReservedDiskResources struct {
+	DiskMB 				uint64
+}
+
+type NodeReservedNetworkResources struct {
+	ReservedHostPorts 	string
+}
+
+type DrainMetadata struct {
+	StartedAt  			time.Time
+	UpdatedAt  			time.Time
+	Status     			DrainStatus
+	AccessorID 			string
+	Meta       			map[string]string
+}
+
+type DrainStatus string

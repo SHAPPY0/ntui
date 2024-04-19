@@ -42,6 +42,21 @@ func ColorizeStatusCell(status string) (tcell.Color, string) {
 	return CellColor, Status
 }
 
+func NodeStatusCell(status string) (tcell.Color, string) {
+	CellColor := tcell.ColorWhite
+	Status := ToCapitalize(status)
+	if Status == "Down" {
+		CellColor = tcell.ColorGray
+	} else if Status == "Disconnected" {
+		Status = SetCellTextColor(Status, "red")
+	} else if Status == "Ready" {
+		Status = SetCellTextColor(Status, "green")
+	} else if Status == "Initializing" {
+		Status = SetCellTextColor(Status, "yellow")
+	}
+	return CellColor, Status
+}
+
 func SetCellTextColor(text, color string) string {
 	Text := fmt.Sprintf("[%s]%s", color, text)
 	return Text

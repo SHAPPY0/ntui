@@ -13,13 +13,19 @@ type Jobs struct {
 	Title			string
 	Headers 		[]string
 	Data 			[]models.Jobs
+	Menus			[]widgets.Item
 }
+
+var JobsMenu = []widgets.Item{
+	widgets.StopJobMenu,
+}  
 
 func NewJobs() *Jobs {
 	j := &Jobs{
 		Table: 		widgets.NewTable(TitleJobs),
 		Title:		TitleJobs,
 		Headers:	[]string{"name", "status", "type", "groups", "priority"},
+		Menus: 		JobsMenu,
 	}
 
 	j.Table.Headers = j.Headers

@@ -28,9 +28,11 @@ func NewHeader() *Header {
 		Metadata:	tview.NewTextView(),
 	}
 	h.RenderLogo()
-	h.RenderMenu()
+	h.RenderMenu(make([]widgets.Item, 0))
 	h.AddItem(h.Logo, 0, 1, false)
-	h.AddItem(h.Menu.MapView, 0, 1, false)
+	h.AddItem(h.Menu.Grid1, 0, 1, false)
+	h.AddItem(h.Menu.Grid2, 0, 1, false)
+	h.AddItem(h.Menu.Grid3, 0, 1, false)
 	h.AddItem(h.Metadata, 0, 1, false)
 	return h
 }
@@ -46,11 +48,8 @@ func (h *Header) RenderLogo() error {
 	return nil
 }
 
-func (h *Header) RenderMenu() error {
-	h.Menu.Add(widgets.EnterMenu, false).
-		Add(widgets.UpArrowMenu, false).
-		Add(widgets.DownArrowMenu, false).
-		Add(widgets.EscMenu, false)
-	h.Menu.Render()
+func (h *Header) RenderMenu(menus []widgets.Item) error {
+	h.Menu.RenderGlobalMenus()
+	h.Menu.RenderMenu(menus)
 	return nil
 }

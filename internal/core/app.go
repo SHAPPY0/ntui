@@ -28,6 +28,7 @@ type PrimitivesX struct {
 	Log				*Log
 	Versions		*Versions
 	VersionDiff 	*VersionDiff
+	Nodes 			*Nodes
 	Modal 			*Modal
 }
 
@@ -59,6 +60,7 @@ func (app *App) Init() error {
 		Log:			NewLog(app),
 		Versions:		NewVersions(app),
 		VersionDiff:	NewVersionDiff(app),
+		Nodes:			NewNodes(app),
 		Modal:			NewModal(app),
 	}
 	app.Primitives.Main  = NewMain(app)
@@ -78,9 +80,9 @@ func BindAppKeys(app *App) {
 		case utils.NtuiEscKey.Key:
 			app.Layout.GoBack()
 			break
-		case utils.NtuiCtrlRKey.Key:
-			app.Layout.OpenPage("main", false)
-			break
+		// case utils.NtuiCtrlRKey.Key:
+		// 	app.Layout.OpenPage("main", false)
+		// 	break
 		case utils.NtuiCtrlVKey.Key:
 			if app.Layout.GetActivePage() == "versions" {
 				app.Primitives.Versions.ConfirmModal()
@@ -103,6 +105,12 @@ func BindAppKeys(app *App) {
 			break
 		case utils.NtuiRuneKey.Key:
 			switch event.Rune() {
+			case '1':
+				app.Layout.OpenPage("nodes", true)
+				break
+			case '2':
+				app.Layout.OpenPage("main", false)
+				break
 			case 'v':
 				if app.Layout.GetActivePage() == "taskgroups" {
 					app.Layout.OpenPage("versions", true)

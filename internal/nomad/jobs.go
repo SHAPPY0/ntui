@@ -175,7 +175,7 @@ func (n *Nomad) Register(jobId string, params *models.NomadParams) error {
 		return err
 	}
 	n.Logger.Info(utils.Stringify(&api.Job{Name: &jobId, Region: &params.Region, Namespace: &params.Namespace}))
-	resp, _, err := n.JobClient.Register(job, &api.WriteOptions{Region: params.Region, Namespace: params.Namespace})
+	resp, _, err := n.JobClient.Register(job, nil)
 	if err != nil {
 		n.Logger.Error("Job " + jobId + "start failed: " + err.Error())
 		return err

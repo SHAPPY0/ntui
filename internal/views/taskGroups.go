@@ -14,6 +14,11 @@ type TaskGroups struct {
 	Title 		string
 	Headers		[]string
 	Data		[]models.TaskGroups
+	Menus		[]widgets.Item
+}
+
+var TgMenu = []widgets.Item{
+	widgets.VersionMenu,
 }
 
 func NewTaskGroups() *TaskGroups {
@@ -21,6 +26,7 @@ func NewTaskGroups() *TaskGroups {
 		Table:		widgets.NewTable(TitleTaskGroups),
 		Title:		TitleTaskGroups,
 		Headers:	[]string{"name", "running", "completed", "failed", "lost", "queued", "starting", "unknown"},
+		Menus:		TgMenu,
 	}
 	tg.Table.Headers = tg.Headers
 	tg.Table.DrawHeader()

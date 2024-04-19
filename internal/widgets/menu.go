@@ -4,9 +4,15 @@ import (
 	"fmt"
 )
 
+var menuItemsLimit = 5
+
 type Menu struct {
-	*MapView
+	*Flex
+	Grid1		*MapView
+	Grid2		*MapView
+	Grid3		*MapView
 	Items		[]Item
+	Default 	[]Item
 }
 
 type Item struct {
@@ -38,8 +44,8 @@ var (
 	}
 	RegionNMenu = Item{
 		Name:		"region_namespace",
-		Icon:		"ctrl+r",
-		Description: "Show Region & Namespace",
+		Icon:		"2",
+		Description: "Region/Namespace",
 	}
 	LogMenu = Item{
 		Name:		"log",
@@ -81,13 +87,37 @@ var (
 		Icon:		"ctrl+s",
 		Description: "Start Job",
 	}
+	NodeMenu = Item{
+		Name:		"nodes",
+		Icon:		"1",
+		Description: "Nodes",
+	}
 )
+
+var DefaultMenus = []Item{
+	UpArrowMenu,
+	DownArrowMenu,
+	EnterMenu,
+	EscMenu,
+}
+
+var DefaultGlobalMenus = []Item{
+	NodeMenu,
+	RegionNMenu,
+}
 
 func NewMenu() *Menu {
 	m := &Menu{
-		MapView:	NewMapView(),
+		Flex:		NewFlex(),
+		Grid1:		NewMapView(),
+		Grid2:		NewMapView(),
+		Grid3:		NewMapView(),
 		Items:		make([]Item, 0),
+		Default:	DefaultMenus,
 	}
+	m.Flex.AddItemX(m.Grid1, 0, 1, false)
+	m.Flex.AddItemX(m.Grid2, 0, 1, false)
+	m.Flex.AddItemX(m.Grid3, 0, 1, false)
 	return m
 }
 
@@ -113,13 +143,48 @@ func (m *Menu) Add(menu Item, refresh bool) *Menu {
 }
 
 func (m *Menu) Render() {
-	m.Clear()
-	for _, Menu := range m.Items {
-		Key := fmt.Sprintf("[%s]<%s>", "orange", Menu.Icon)
-		Value := fmt.Sprintf("[%s]%s\n", "DimGray", Menu.Description)
-		m.SetMapKeyValue(Key, Value)
+	// m.Grid1.Clear()
+	m.Grid2.Clear()
+	m.Grid3.Clear()
+	for i, menu := range m.Items {
+		key := fmt.Sprintf("[%s]<%s>", "orange", menu.Icon)
+		value := fmt.Sprintf("[%s]%s\n", "DimGray", menu.Description)
+		if i < menuItemsLimit {
+			m.Grid2.SetMapKeyValue(key, value)
+		} else if (i + 1) > menuItemsLimit && (i + 1) < (menuItemsLimit * 2) {
+			m.Grid3.SetMapKeyValue(key, value)
+		} 
+		// else if (i + 1) > (menuItemsLimit * 2) && (i + 1) < (menuItemsLimit * 3) {
+		// 	m.Grid3.SetMapKeyValue(key, value)
+		// }
 	}
-	m.DrawMapView()
+	if m.Grid2.Size > 0 {
+		m.Grid2.DrawMapView()
+	}
+	if m.Grid3.Size > 0 {
+		m.Grid3.DrawMapView()
+	}
+	// if m.Grid3.Size > 0 {
+	// 	m.Grid3.DrawMapView()
+	// }
+}
+
+func (m *Menu) RenderGlobalMenus() {
+	m.Grid1.Clear()
+	for _, menu := range DefaultGlobalMenus {
+		key := fmt.Sprintf("[%s]<%s>", "orange", menu.Icon)
+		value := fmt.Sprintf("[%s]%s\n", "DimGray", menu.Description)
+		m.Grid1.SetMapKeyValue(key, value)
+	}
+	m.Grid1.DrawMapView()
+}
+
+func (m *Menu) RenderMenu(menus []Item) {
+	var allMenus = append(DefaultMenus, menus...)
+	for _, menu :=  range allMenus {
+		m.Add(menu, false)
+	}
+	m.Render()
 }
 
 func (m *Menu) Remove(menu Item) {
@@ -131,8 +196,13 @@ func (m *Menu) Remove(menu Item) {
 	m.Render()
 }
 
+func (m *Menu) RemoveMenus(menus []Item) {
+	for _, menu := range menus {
+		m.Remove(menu)
+	}
+}
+
 func (m *Menu) Replace(item1 Item, item2 Item) {
 	m.Add(item2, false)
 	m.Remove(item1)
-	
 }

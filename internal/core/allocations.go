@@ -6,7 +6,7 @@ import (
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/models"
 	"github.com/shappy0/ntui/internal/utils"
-	"github.com/shappy0/ntui/internal/widgets"
+	// "github.com/shappy0/ntui/internal/widgets"
 )
 
 type Allocations struct {
@@ -58,12 +58,12 @@ func (a *Allocations) UpdateTable(data map[string]string) {
 }
 
 func (a *Allocations) OnFocus() {
-	a.App.Layout.Header.Menu.Add(widgets.RestartTaskMenu, true)
+	a.App.Layout.Header.Menu.RenderMenu(a.Menus)
 	go a.Listener.Listen()
 }
 
 func (a *Allocations) OnBlur() {
-	a.App.Layout.Header.Menu.Remove(widgets.RestartTaskMenu)
+	a.App.Layout.Header.Menu.RemoveMenus(a.Menus)
 	go a.Listener.Stop()
 }
 

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"reflect"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -146,4 +147,62 @@ func (c *Config) Load(flags Flags) (*Config, error) {
 	}
 
 	return config, nil
+}
+
+func (f *Flags) ParseCommand(cmd *cobra.Command) *Flags {
+	customConfigPath, err := cmd.Flags().GetString("config-path")
+	if err != nil {
+		panic(err)
+	}
+	f.ConfigPath = customConfigPath
+
+	refreshRate, err := cmd.Flags().GetInt("refresh")
+	if err != nil {
+		panic(err)
+	}
+	f.RefreshRate = refreshRate
+
+	homeDir, err := cmd.Flags().GetString("home-dir")
+	if err != nil {
+		panic(err)
+	}
+	f.HomeDir = homeDir
+
+	logLevel, err := cmd.Flags().GetString("log-level")
+	if err != nil {
+		panic(err)
+	}
+	f.LogLevel = logLevel
+
+	host, err := cmd.Flags().GetString("host")
+	if err != nil {
+		panic(err)
+	}
+	f.Host = host
+	
+	namespace, err := cmd.Flags().GetString("namespace")
+	if err != nil {
+		panic(err)
+	}
+	f.Namespace = namespace
+
+	region, err := cmd.Flags().GetString("region")
+	if err != nil {
+		panic(err)
+	}
+	f.Region = region
+
+	skipVerify, err := cmd.Flags().GetBool("skip-verify")
+	if err != nil {
+		panic(err)
+	}
+	f.SkipVerify = skipVerify
+
+	token, err := cmd.Flags().GetString("token")
+	if err != nil {
+		panic(err)
+	}
+	f.Token = token
+
+	return f
 }

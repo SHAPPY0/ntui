@@ -54,15 +54,17 @@ func (l *Log) BindInputCapture() {
 }
 
 func (l *Log) UpdateMenu() {
-	l.App.Layout.Header.Menu.Remove(widgets.EnterMenu)
-	l.App.Layout.Header.Menu.Remove(widgets.UpArrowMenu)
-	l.App.Layout.Header.Menu.Remove(widgets.DownArrowMenu)
+	l.App.Layout.Header.Menu.RemoveMenus([]widgets.Item{
+		widgets.EnterMenu, 
+		widgets.UpArrowMenu, 
+		widgets.DownArrowMenu,
+	})
 	if l.DefaultType == LOG_STDERR {
-		l.App.Layout.Header.Menu.Remove(widgets.StderrMenu)
-		l.App.Layout.Header.Menu.Add(widgets.StdoutMenu, true)
+		l.App.Layout.Header.Menu.Remove(l.Menus[1])
+		l.App.Layout.Header.Menu.Add(l.Menus[0], true)
 	} else {
-		l.App.Layout.Header.Menu.Remove(widgets.StdoutMenu)
-		l.App.Layout.Header.Menu.Add(widgets.StderrMenu, true)
+		l.App.Layout.Header.Menu.Remove(l.Menus[0])
+		l.App.Layout.Header.Menu.Add(l.Menus[1], true)
 	}
 }
 

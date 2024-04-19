@@ -4,7 +4,7 @@ import (
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/utils"
 	"github.com/shappy0/ntui/internal/models"
-	"github.com/shappy0/ntui/internal/widgets"
+	// "github.com/shappy0/ntui/internal/widgets"
 )
 
 type Tasks struct {
@@ -32,11 +32,8 @@ func (t *Tasks) OnFocus() {
 			t.SelectedValue = alloc
 		}
 	}
-	t.App.Layout.Header.Menu.Remove(widgets.EnterMenu)
-	t.App.Layout.Header.Menu.Remove(widgets.UpArrowMenu)
-	t.App.Layout.Header.Menu.Remove(widgets.DownArrowMenu)
-	t.App.Layout.Header.Menu.Add(widgets.RestartTaskMenu, false)
-	t.App.Layout.Header.Menu.Add(widgets.LogMenu, true)
+	t.App.Layout.Header.Menu.RenderMenu(t.Menus)
+	t.App.Layout.Header.Menu.RemoveMenus(t.RemoveMenus)
 	t.DrawView(t.SelectedValue)
 }
 
@@ -45,9 +42,6 @@ func (t *Tasks) OnBlur() {
 	t.UsageView.Clear()
 	t.DetailsView.Clear()
 	t.Tasks.Clear()
-	t.App.Layout.Header.Menu.Remove(widgets.LogMenu)
-	t.App.Layout.Header.Menu.Remove(widgets.RestartTaskMenu)
-	t.App.Layout.Header.Menu.Add(widgets.EnterMenu, false)
-	t.App.Layout.Header.Menu.Add(widgets.UpArrowMenu, false)
-	t.App.Layout.Header.Menu.Add(widgets.DownArrowMenu, true)
+	t.App.Layout.Header.Menu.RenderMenu(t.RemoveMenus)
+	t.App.Layout.Header.Menu.RemoveMenus(t.Menus)
 }

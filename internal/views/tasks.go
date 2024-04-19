@@ -19,19 +19,34 @@ var (
 
 type Tasks struct {
 	*widgets.Flex
-	Title 		string
-	DetailsView *widgets.Flex
-	InfoView 	*widgets.Flex
-	UsageView 	*tview.TextView
-	EventsTable	*widgets.Table
+	Title 			string
+	DetailsView 	*widgets.Flex
+	InfoView 		*widgets.Flex
+	UsageView 		*tview.TextView
+	EventsTable		*widgets.Table
+	Menus 			[]widgets.Item
+	RemoveMenus		[]widgets.Item
+}
+
+var TaskMenus = []widgets.Item{
+	widgets.RestartTaskMenu,
+	widgets.LogMenu,
+}
+
+var RemoveTaskMenus = []widgets.Item{
+	widgets.EnterMenu,
+	widgets.UpArrowMenu,
+	widgets.DownArrowMenu,
 }
 
 func NewTasks() *Tasks {
 	t := &Tasks{
-		Flex:		widgets.NewFlex(),
-		Title:		TitleTasks,
-		DetailsView: widgets.NewFlex(),
-		EventsTable: widgets.NewTable(TitleEvents),
+		Flex:			widgets.NewFlex(),
+		Title:			TitleTasks,
+		DetailsView: 	widgets.NewFlex(),
+		EventsTable: 	widgets.NewTable(TitleEvents),
+		Menus:			TaskMenus,
+		RemoveMenus:	RemoveTaskMenus,
 	}
 	t.SetTitleX(t.Title, "")
 	return t

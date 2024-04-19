@@ -8,14 +8,21 @@ type Log struct {
 	*widgets.TextView
 	Title 		string
 	Log 		[]byte
+	Menus 		[]widgets.Item
 }
 
 var TitleLog = "log"
+
+var LogMenu = []widgets.Item{
+	widgets.StdoutMenu,
+	widgets.StderrMenu,
+}
 
 func NewLog() *Log {
 	l := &Log{
 		TextView:		widgets.NewTextView(TitleLog),
 		Title:			TitleLog,
+		Menus:			LogMenu,
 	}
 	return l
 }

@@ -12,17 +12,17 @@ type NamespaceClient interface {
 }
 
 func (n *Nomad) Namespaces() ([]models.Namespaces, error) {
-	Result := make([]models.Namespaces, 0)
-	Data, _, Err := n.NamespaceClient.List(nil)
-	if Err != nil {
-		return Result, Err
+	result := make([]models.Namespaces, 0)
+	data, _, err := n.NamespaceClient.List(nil)
+	if err != nil {
+		return result, err
 	}
-	for Index, Ns := range Data {
-		var Namespace models.Namespaces
-		Namespace.Id 			= utils.IntToStr(Index)
-		Namespace.Name 			= Ns.Name
-		Namespace.Description 	= Ns.Description
-		Result = append(Result, Namespace)
+	for index, ns := range data {
+		var namespace models.Namespaces
+		namespace.Id 			= utils.IntToStr(index)
+		namespace.Name 			= ns.Name
+		namespace.Description 	= ns.Description
+		result = append(result, namespace)
 	}
-	return Result, nil
+	return result, nil
 }

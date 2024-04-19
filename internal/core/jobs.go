@@ -30,12 +30,12 @@ func NewJobs(app *App) *Jobs {
 }
 
 func (j *Jobs) OnFocus() {
-	j.App.Layout.Header.Menu.Add(widgets.StopJobMenu, true)
+	j.App.Layout.Header.Menu.RenderMenu(j.Menus)
 	go j.Listener.Listen()
 }
 
 func (j *Jobs) OnBlur() {
-	j.App.Layout.Header.Menu.Remove(widgets.StopJobMenu)
+	j.App.Layout.Header.Menu.RemoveMenus(j.Menus)
 	go j.Listener.Stop()
 }
 
