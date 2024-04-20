@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/shappy0/ntui/internal/views"
+	"github.com/shappy0/ntui/internal/models"
 )
 
 type Regions struct {
@@ -35,6 +36,12 @@ func (reg *Regions) OnRowSelected(row, col int) {
 	reg.App.Config.SetRegion(reg.SelectedValue["region"])
 	reg.App.Alert.Loader(true)
 	go func() {
+		metadata := models.Metadata{
+			Host:	reg.App.Config.NomadBaseUrl,
+			Region:	reg.App.Config.Region,
+			Namespace:	reg.App.Config.Namespace,
+		}
+		reg.App.Layout.Header.SetMetadata(metadata)
 		reg.App.Layout.QueueUpdateDraw(func() {
 			reg.App.Primitives.Namespaces.UpdateTable()
 			reg.App.Alert.Loader(false)

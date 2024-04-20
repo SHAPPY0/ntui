@@ -1,40 +1,76 @@
-SHELL 		 = bash
-NAME 		:= ntui11
-PACKAGE 	:= github.com/shappy0/$(NAME)
-UNAME 		:= $(shell uname -s)
-DIR_NAME	 := .$(NAME)
-CONFIG_FILE	 := config1.json
-HOME_DIR	 := ""
-HELP_FORMAT	 := "  \033[36m%-25s\033[0m %s\n"
+SHELL			=	/bin/bash
+NAME			:= ntui11
+PACKAGE			:= github.com/shappy0/$(NAME)
+UNAME			:= $(shell uname -s)
+DIRNAME			:= .$(NAME)
+CONFIGFILE		:= config2.json
+HOMEDIR			:= ""
+HELPFORMAT		:= "  \033[36m%-25s\033[0m %s\n"
+VERSION			?= v0.01
+GIT_REV 		:= $(shell git rev-parse --short HEAD)
+GO_LDFLAGS 		:= "$(GO_LDFLAGS) -X $(PACKAGE)/cmd.Version=$(VERSION) -X $(PACKAGE)/cmd.Commit=$(GIT_REV)"
+OUTPUT			:= ./bin/ntui
 
 default: help
 
 .PHONY: help
+
 help: ## Display help options
 	@echo "Valid targets:"
 	@grep -E '^[^ ]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		sort | \
 		awk 'BEGIN {FS = ":.*?## "}; \
-			{printf $(HELP_FORMAT), $$1, $$2}'
+			{printf $(HELPFORMAT), $$1, $$2}'
 	@echo ""
 
 .PHONY: install
+
 install: ## Install ntui
 	@echo "==> Installing ntui"
+
 ifeq ($(UNAME), Darwin)
-	@echo Mac
+	@if [ ! -d $(HOME)/$(DIRNAME) ]; then \
+		mkdir -p $(HOME)/$(DIRNAME); \
+	fi \
+
+	@if [ ! -f $(HOME)/$(DIRNAME)/$(CONFIGFILE) ]; then \
+		cp config.json $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
+	fi \
+
 else ifeq ($(UNAME), Linux)
-	HOMEDIR := $(HOME)/$(DIR_NAME)
-	if [ ! -f "$(HOMEDIR)/$(CONFIG_FILE)" ]; then \
-		@mkdir -p $(HOMEDIR)/$(CONFIG_FILE) \
-		@echo okas > "$(HOMEDIR)/$(CONFIG_FILE)"; \
-	fi
+	@if [ ! -d $(HOME)/$(DIRNAME) ]; then \
+		mkdir -p $(HOME)/$(DIRNAME); \
+	fi \
+
+	@if [ ! -f $(HOME)/$(DIRNAME)/$(CONFIGFILE) ]; then \
+		cp config.json $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
+	fi \
+
 else
+	@if [ ! -d $(HOME)/$(DIRNAME) ]; then \
+		mkdir -p $(HOME)/$(DIRNAME); \
+	fi \
+
+	@if [ ! -f $(HOME)/$(DIRNAME)/$(CONFIGFILE) ]; then \
+		cp config.json $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
+	fi \
 
 endif
+	@echo "==> Installation Done!"
 
 
 
 .PHONY: build
+
 build: ## Build ntui
-	go build -o bin/ntui main.go
+	@echo "==> Building ntui"
+	@CGO_ENABLED=0 go build -ldflags $(GO_LDFLAGS) -o $(OUTPUT)
+	@go install
+	@echo "Build Done!"
+
+.PHONY: clean
+
+clean: ## Clean build
+	@echo "==> Cleaning"
+	rm -f $(OUTPUT)
+	@echo "Cleaning Done!"

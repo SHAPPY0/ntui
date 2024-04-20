@@ -1,0 +1,18 @@
+{
+    "Home_Dir": "",
+    "Config_Path": "",
+    "Log_Level": "",
+    "Log_Dir": "",
+    "Refresh_Rate": 1, 
+    "Nomad_Server_Base_Url": "",
+    "Nomad_Http_Auth": "",
+    "Nomad_Token": "",
+    "Nomad_Region": "",
+    "Nomad_Namespace": "",
+    "Nomad_Cacert": "",
+    "Nomad_Capath": "",
+    "Nomad_Client_Cert": "",
+    "Nomad_Client_Key": "",
+    "Nomad_Tls_Server": "",
+    "Nomad_Skip_Verify": true
+}

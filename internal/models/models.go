@@ -30,6 +30,12 @@ type NomadParams struct {
 	JobId		string
 }
 
+type Metadata struct {
+	Host 		string
+	Namespace	string
+	Region 		string
+}
+
 type Jobs struct {
 	ID					string
 	Name				string

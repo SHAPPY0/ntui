@@ -5,6 +5,7 @@ import (
 	"github.com/rivo/tview"
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/widgets"
+	"github.com/shappy0/ntui/internal/models"
 )
 
 type Layout struct {
@@ -36,6 +37,12 @@ func NewLayout() *Layout {
 }
 
 func (l *Layout) Run(app *App) error {
+	metadata := models.Metadata{
+		Host:		app.Config.NomadBaseUrl,
+		Namespace: 	app.Config.Namespace,
+		Region:		app.Config.Region,
+	}
+	l.Header.SetMetadata(metadata)
 	go func() {
 		<- time.After(1 * time.Second)
 		l.QueueUpdateDraw(func() {

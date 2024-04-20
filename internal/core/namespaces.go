@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/shappy0/ntui/internal/views"
+	"github.com/shappy0/ntui/internal/models"
 )
 
 type Namespaces struct {
@@ -34,6 +35,12 @@ func (n *Namespaces) OnRowSelected(row, col int) {
 	n.App.Config.SetNamespace(n.SelectedValue["name"])
 	n.App.Alert.Loader(true)
 	go func() {
+		metadata := models.Metadata{
+			Host:	n.App.Config.NomadBaseUrl,
+			Region:	n.App.Config.Region,
+			Namespace:	n.App.Config.Namespace,
+		}
+		n.App.Layout.Header.SetMetadata(metadata)
 		n.App.Layout.QueueUpdateDraw(func() {
 			n.App.Primitives.Jobs.UpdateTable()
 			n.App.Alert.Loader(false)
