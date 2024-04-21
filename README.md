@@ -126,7 +126,4 @@ Below are the falgs which can be passed while running ntui -
 # Logs Screen
 [e]: To view stderr logs.
 [o]: To view stdout logs.
-```
 
-## Developer:
-[Saurabh Sharma](http://linkedin.com/in/sharmasaurabh450)
