@@ -1,15 +1,15 @@
 SHELL			=	/bin/bash
-NAME			:= ntui11
+NAME			:= ntui
 PACKAGE			:= github.com/shappy0/$(NAME)
 UNAME			:= $(shell uname -s)
 DIRNAME			:= .$(NAME)
-CONFIGFILE		:= config2.json
+CONFIGFILE		:= config.json
 HOMEDIR			:= ""
 HELPFORMAT		:= "  \033[36m%-25s\033[0m %s\n"
 VERSION			?= v0.01
 GIT_REV 		:= $(shell git rev-parse --short HEAD)
 GO_LDFLAGS 		:= "$(GO_LDFLAGS) -X $(PACKAGE)/cmd.Version=$(VERSION) -X $(PACKAGE)/cmd.Commit=$(GIT_REV)"
-OUTPUT			:= ./bin/ntui
+OUTPUT			:= ./bin/$(NAME)
 
 default: help
 
