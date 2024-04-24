@@ -131,12 +131,16 @@ Below are the falgs which can be passed while running ntui -
 
 ##### Global Keys
 <`1`>: To view Nodes
+
 <`2`>: To view regions and namespaces 
+
 <`esc`>: To go back to previous screen
+
 <`enter`>: To select the row
 
 ##### Jobs Screen
 <`ctrl+q`>: To stop job
+
 <`ctrl+s`>: To start job
 
 ##### TaskGroups Screen
@@ -150,9 +154,11 @@ Below are the falgs which can be passed while running ntui -
 
 ##### Tasks Screen
 <`ctrl+t`>: To restart selected task.
+
 <`l`>: To view logs of selected task.
 
 ##### Logs Screen
 <`e`>: To view stderr logs.
+
 <`o`>: To view stdout logs.
 
