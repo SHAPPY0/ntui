@@ -66,14 +66,29 @@ func DateTimeToStr(dateTime time.Time) string {
 }
 
 func DateTimeDiff(dateTime time.Time) string {
-	Current := time.Now()
-	Hours := Current.Sub(dateTime).Hours()
-	Hours, MinFraction := math.Modf(Hours)
-	Minutes := MinFraction * 60
-	Minutes, SecFraction := math.Modf(Minutes)
-	Seconds := SecFraction * 60
-	Diff := fmt.Sprintf("%sh%sm%ss ago", fmt.Sprint(Hours), fmt.Sprint(Minutes), fmt.Sprint(math.Floor(Seconds)))
-	return Diff
+	current := time.Now()
+	hours := current.Sub(dateTime).Hours()
+	hours, minFraction := math.Modf(hours)
+	minutes := minFraction * 60
+	minutes, secFraction := math.Modf(minutes)
+	seconds := secFraction * 60
+	var strBuilder strings.Builder
+	if hours > 0 {
+		h := fmt.Sprintf("%sh", fmt.Sprint(hours))
+		strBuilder.WriteString(h)
+	}
+	m := fmt.Sprintf("%sm", fmt.Sprint(minutes))
+	if minutes < 9 {
+		m = fmt.Sprintf("0%sm", fmt.Sprint(minutes))
+	}
+	strBuilder.WriteString(m)
+	
+	s := fmt.Sprintf("%ss", fmt.Sprint(math.Floor(seconds)))
+	if seconds < 9 {
+		s = fmt.Sprintf("0%ss", fmt.Sprint(math.Floor(seconds)))
+	}
+	strBuilder.WriteString(s)
+	return strBuilder.String()
 }
 
 func FormatMemoryUsage(value int) int {
