@@ -39,7 +39,7 @@ This is an unofficial open source terminal UI tool to manage your [Hashicorp Nom
 
 `ntui` requires some configurations to be set, the default config file should be at user's root home diretory.
 
-Default config json looks like below - 
+Default config file looks like below - 
 
 ```toml
   #Home Directory of ntui
@@ -128,31 +128,31 @@ Below are the falgs which can be passed while running ntui -
 `-t or --token` to set nomad token to perform actions, which requires it.
 
 #### Keys:
-```shell
-# Global Keys
-[1]: To view Nodes
-[2]: To view regions and namespaces 
-[esc]: To go back to previous screen
-[enter]: To select the row
 
-# Jobs Screen
-[ctrl+q]: To stop job
-[ctrl+s]: To start job
+##### Global Keys
+<`1`>: To view Nodes
+<`2`>: To view regions and namespaces 
+<`esc`>: To go back to previous screen
+<`enter`>: To select the row
 
-# TaskGroups Screen
-[v]: To view job verions
+##### Jobs Screen
+<`ctrl+q`>: To stop job
+<`ctrl+s`>: To start job
 
-# Versions Screen
-[ctrl+v]: To revert the selected job verions
+##### TaskGroups Screen
+<`v`>: To view job verions
 
-# Allocations Screen
-[ctrl+t]: To restart selected task.
+##### Versions Screen
+<`ctrl+v`>: To revert the selected job verions
 
-# Tasks Screen
-[ctrl+t]: To restart selected task.
-[l]: To view logs of selected task.
+##### Allocations Screen
+<`ctrl+t`>: To restart selected task.
 
-# Logs Screen
-[e]: To view stderr logs.
-[o]: To view stdout logs.
+##### Tasks Screen
+<`ctrl+t`>: To restart selected task.
+<`l`>: To view logs of selected task.
+
+##### Logs Screen
+<`e`>: To view stderr logs.
+<`o`>: To view stdout logs.
 
