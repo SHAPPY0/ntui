@@ -3,10 +3,12 @@ package core
 import (
 	"fmt"
 	"os"
-	"io/ioutil"
-	"encoding/json"
+	"errors"
+	// "io/ioutil"
+	// "encoding/json"
 	"reflect"
 	"github.com/spf13/cobra"
+	"github.com/BurntSushi/toml"
 )
 
 const (
@@ -14,7 +16,7 @@ const (
 	ShortDesc = "A graphical CLI for your Hashicorp Nomad Cluster Management"
 	LongDesc = "Ntui is a CLI to view and manage your Hashicorp Nomad Clusters."
 	DefaultConfigDir = "." + AppName
-	DefaultConfigFile = "config.json"
+	DefaultConfigFile = "config.toml"
 	DefaultLogDir = "logs"
 	DefaultLogFile = "/ntui.log"
 )
@@ -38,22 +40,22 @@ type Flags struct {
 }
 
 type Config struct {
-	AppName			string 		`json:"App_Name"`
-	HomeDir 		string 		`json:"Home_Dir"`
-	LogLevel 		string		`json:"Log_Level"`
-	LogDir 			string		`json:"Log_Dir"`
-	RefreshRate 	int			`json:"Refresh_Rate"`
-	NomadBaseUrl	string		`json:"Nomad_Server_Base_Url"`
-	NomadHttpAuth	string		`json:"Nomad_Http_Auth"`
-	NomadToken		string		`json:"Nomad_Token"`
-	Region			string		`json:"Nomad_Region"`
-	Namespace		string		`json:"Nomad_Namespace"`
-	NomadCaCert 	string 		`json:"Nomad_Cacert"`
-	NomadCaPath		string 		`json:"Nomad_Capath"`
-	NomadClientCert string 		`json:"Nomad_Client_Cert"`
-	NomadClientKey 	string 		`json:"Nomad_Client_Key"`
-	NomadTlsServer	string 		`json:"Nomad_Tls_Server"`
-	NomadSkipVerify	bool		`json:"Nomad_Skip_Verify"`
+	AppName			string 		`toml:"App_Name"`
+	HomeDir 		string 		`toml:"Home_Dir"`
+	LogLevel 		string		`toml:"Log_Level"`
+	LogDir 			string		`toml:"Log_Dir"`
+	RefreshRate 	int			`toml:"Refresh_Rate"`
+	NomadBaseUrl	string		`toml:"Nomad_Server_Base_Url"`
+	NomadHttpAuth	string		`toml:"Nomad_Http_Auth"`
+	NomadToken		string		`toml:"Nomad_Token"`
+	Region			string		`toml:"Nomad_Region"`
+	Namespace		string		`toml:"Nomad_Namespace"`
+	NomadCaCert 	string 		`toml:"Nomad_Cacert"`
+	NomadCaPath		string 		`toml:"Nomad_Capath"`
+	NomadClientCert string 		`toml:"Nomad_Client_Cert"`
+	NomadClientKey 	string 		`toml:"Nomad_Client_Key"`
+	NomadTlsServer	string 		`toml:"Nomad_Tls_Server"`
+	NomadSkipVerify	bool		`toml:"Nomad_Skip_Verify"`
 }
 
 func NewConfig() *Config {
@@ -93,13 +95,13 @@ func SetConfigValues(c *Config, flags Flags) {
 	if c.HomeDir == "" {
 		c.HomeDir = flags.HomeDir
 	}
-	if c.RefreshRate == 0 {
+	if c.RefreshRate == 0 || (c.RefreshRate > 0 && flags.RefreshRate != 5) {
 		c.RefreshRate = flags.RefreshRate
 	}
 	if flags.Host != "" {
 		c.NomadBaseUrl = flags.Host
 	}
-	if c.LogLevel == "" {
+	if c.LogLevel != "" {
 		c.LogLevel = flags.LogLevel
 	}
 	if c.HomeDir != "" && c.LogDir == "" {
@@ -114,7 +116,7 @@ func SetConfigValues(c *Config, flags Flags) {
 	if flags.Token != "" {
 		c.NomadToken = flags.Token
 	}
-	if flags.SkipVerify != false {
+	if flags.SkipVerify == true {
 		c.NomadSkipVerify = flags.SkipVerify
 	}
 }
@@ -132,15 +134,17 @@ func (c *Config) Load(flags Flags) (*Config, error) {
 	if configPath == "" {
 		panic(fmt.Errorf("No config file found"))
 	}
-
-	configJson, err := ioutil.ReadFile(configPath)
+	if _, err := os.Stat(configPath); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, fmt.Errorf("Invalid config file path")
+		} else {
+			return nil, fmt.Errorf("Unable to load config file.")
+		}
+	}
+	_, err := toml.DecodeFile(configPath, &config)
 	if err != nil {
-		return config, err
+		fmt.Println(err)
 	}
-	if err = json.Unmarshal([]byte(configJson), &config); err != nil {
-		return config, err
-	}
-
 	SetConfigValues(config, flags)
 	for key, value := range EnvVars {
 		os.Setenv(key, GetValue(config, value))

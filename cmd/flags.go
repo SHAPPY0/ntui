@@ -7,7 +7,7 @@ import (
 var (
 	AppName = "ntui"
 	DefaultConfigDir = "." + AppName
-	DefaultConfigFile = "config.json"
+	DefaultConfigFile = "config.toml"
 	userHomeDir, _ = os.UserHomeDir()
 	DefaultRefreshRate = 5
 	DefaultLogLevel = "info"

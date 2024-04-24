@@ -35,16 +35,16 @@ func Init(cmd *cobra.Command, args []string) error {
 	var flags core.Flags
 	flags.ParseCommand(cmd)
 	
-	Config, Err := core.NewConfig().Load(flags)
-	if Err != nil {
-		return fmt.Errorf("Unable to load config file")
+	config, err := core.NewConfig().Load(flags)
+	if err != nil {
+		return err
 	}
 	
-	if err := utils.EnsureDirPath(Config.LogDir + core.DefaultLogFile, utils.DefaultDirMod); err != nil {
+	if err := utils.EnsureDirPath(config.LogDir + core.DefaultLogFile, utils.DefaultDirMod); err != nil {
 		return err
 	}
 
-	logFile, err := os.OpenFile(Config.LogDir + core.DefaultLogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, utils.DefaultFileMod)
+	logFile, err := os.OpenFile(config.LogDir + core.DefaultLogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, utils.DefaultFileMod)
 	if err != nil {
 		return err
 	}
@@ -61,9 +61,9 @@ func Init(cmd *cobra.Command, args []string) error {
 		}
 	}()
 
-	var logger = utils.NewLogger(Config.LogLevel, logFile)
+	var logger = utils.NewLogger(config.LogLevel, logFile)
 
-	app, err := core.NewApp(Config, logger)
+	app, err := core.NewApp(config, logger)
 	if err != nil {
 		return err
 	}

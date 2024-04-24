@@ -3,7 +3,7 @@ NAME			:= ntui
 PACKAGE			:= github.com/shappy0/$(NAME)
 UNAME			:= $(shell uname -s)
 DIRNAME			:= .$(NAME)
-CONFIGFILE		:= config.json
+CONFIGFILE		:= config.toml
 HOMEDIR			:= ""
 HELPFORMAT		:= "  \033[36m%-25s\033[0m %s\n"
 VERSION			?= v0.01
@@ -34,7 +34,7 @@ ifeq ($(UNAME), Darwin)
 	fi \
 
 	@if [ ! -f $(HOME)/$(DIRNAME)/$(CONFIGFILE) ]; then \
-		cp config.json $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
+		cp config.toml $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
 	fi \
 
 else ifeq ($(UNAME), Linux)
@@ -43,7 +43,7 @@ else ifeq ($(UNAME), Linux)
 	fi \
 
 	@if [ ! -f $(HOME)/$(DIRNAME)/$(CONFIGFILE) ]; then \
-		cp config.json $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
+		cp config.toml $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
 	fi \
 
 else
@@ -52,7 +52,7 @@ else
 	fi \
 
 	@if [ ! -f $(HOME)/$(DIRNAME)/$(CONFIGFILE) ]; then \
-		cp config.json $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
+		cp config.toml $(HOME)/$(DIRNAME)/$(CONFIGFILE); \
 	fi \
 
 endif

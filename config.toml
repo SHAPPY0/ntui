@@ -1,0 +1,51 @@
+#---------------------------------------
+#       Config file of ntui app
+#---------------------------------------
+
+#Home Directory of ntui
+Home_Dir = ""
+
+#Set the config path from where all configs should be read
+#Config_Path = ""
+
+#Set log levels, default: info (info|error|warn) 
+#Log_Level = "info"
+
+#Set custom log directory for storing ntui app logs
+#Log_Dir = ""
+
+#Set ntui screen table data refresh rate, default: 5
+#Refresh_Rate = 5
+
+#Set Nomad HTTP authentication credentials, format username:password
+#Nomad_Http_Auth = ""
+
+#Set Nomad Server URL
+Nomad_Server_Base_Url = ""
+
+#Set Nomad ACL Token
+#Nomad_Token = ""
+
+#Set Default Nomad Cluster Region
+Nomad_Region = ""
+
+#Set Default Nomad Region's Namespace
+Nomad_Namespace = ""
+
+#Set Nomad CA certificate
+#Nomad_Cacert = ""
+
+#Set Nomad CA path
+#Nomad_Capath = ""
+
+#Set Nomad Client Certificate
+#Nomad_Client_Cert = ""
+
+#Set Nomad Client Certificate Key
+#Nomad_Client_Key = ""
+
+#Set Nomad TLS server
+#Nomad_Tls_Server = ""
+
+#Set If skip certificate verify
+#Nomad_Skip_Verify = false

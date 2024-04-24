@@ -74,14 +74,14 @@ func (v *Versions) ConfirmModal() {
 		title := fmt.Sprintf("Are you sure to revert version %s%s?", v.JobId, v.SelectedValue["version"])
 		confirmModal.SetTitle(title)
 		confirmModal.SetData(v.SelectedValue)
-		confirmModal.AddButtons([]string{"Revert", "Cancel"})
+		confirmModal.AddButtons([]string{"Cancel", "Revert"})
 		confirmModal.SetResponseFunc(v.HandleModalResponse)
 		v.App.Layout.OpenPage("modal", true)
 	}
 }
 
 func (v *Versions) HandleModalResponse(index int, label string) {
-	if index == 0 && label == "Revert" {
+	if index == 1 && label == "Revert" {
 		Params := &models.NomadParams{
 			Region:		v.App.Config.GetRegion(),
 			Namespace:	v.App.Config.GetNamespace(),

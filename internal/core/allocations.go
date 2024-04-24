@@ -25,7 +25,7 @@ func NewAllocations(app *App) *Allocations {
 	}
 	a.App.Layout.Body.AddPageX(a.GetTitle(), a, true, false)
 	a.SetOnSelectFn(a.OnRowSelected)
-	a.Listener = utils.NewListener(a.Refresher)
+	a.Listener = utils.NewListener(app.Config.RefreshRate, a.Refresher)
 	a.SetFocusFunc(a.OnFocus)
 	a.SetBlurFunc(a.OnBlur)
 	return a
@@ -84,7 +84,7 @@ func (a *Allocations) GetAllocationData(id string) (models.Allocations, bool) {
 }
 
 func (a *Allocations) HandleButtonResponse(index int, label string) {
-	if index == 0 && label == "Restart" {
+	if index == 1 && label == "Restart" {
 		Allocations, Ok := a.GetAllocationData(a.SelectedValue["id"])
 		if Ok {
 			a.App.Alert.Loader(true)
@@ -115,7 +115,7 @@ func (a *Allocations) InitRestartModal() {
 	Title := fmt.Sprintf("Are you sure to restart %s/%s?", a.SelectedValue["id"], a.SelectedValue["name"])
 	ConfirmModal.SetTitle(Title)
 	ConfirmModal.SetData(a.SelectedValue)
-	ConfirmModal.AddButtons([]string{"Restart", "Cancel"})
+	ConfirmModal.AddButtons([]string{"Cancel", "Restart"})
 	ConfirmModal.SetResponseFunc(a.HandleButtonResponse)
 	a.App.Layout.OpenPage("modal", true)
 }

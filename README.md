@@ -26,12 +26,12 @@ This is an unofficial open source terminal UI tool to manage your [Hashicorp Nom
 1. Clone this git repository.
 2. Run `make install`
 3. Run `make build`.
-4. Make sure to set all the configurations inside `config.json`
+4. Make sure to set all the configurations inside `config.toml`
 5. Run `ntui` to start the tui.
 
 #### Install By shell script:
 1. Clone this git repository.
-2. Run setup script using `bash ./setup.sh`. It will setup a home directory(`.ntui`) with configs. Make sure to set all the configurations inside `config.json`.
+2. Run setup script using `bash ./setup.sh`. It will setup a home directory(`.ntui`) with configs. Make sure to set all the configurations inside `config.toml`.
 3. Run build script using `bash ./build.sh`. It will build the code in local system.
 4. Run it using `./bin/ntui`. More options can be viewed using `./bin/ntui --help`  
 
@@ -41,25 +41,54 @@ This is an unofficial open source terminal UI tool to manage your [Hashicorp Nom
 
 Default config json looks like below - 
 
-```json
-  {
-    "Home_Dir": "",
-    "Config_Path": "",
-    "Log_Level": "",
-    "Log_Dir": "",
-    "Refresh_Rate": 5, 
-    "Nomad_Server_Base_Url": "",
-    "Nomad_Http_Auth": "",
-    "Nomad_Token": "",
-    "Nomad_Region": "",
-    "Nomad_Namespace": "",
-    "Nomad_Cacert": "",
-    "Nomad_Capath": "",
-    "Nomad_Client_Cert": "",
-    "Nomad_Client_Key": "",
-    "Nomad_Tls_Server": "",
-    "Nomad_Skip_Verify": true
-}
+```toml
+  #Home Directory of ntui
+  Home_Dir = ""
+
+  #Set the config path from where all configs should be read
+  #Config_Path = ""
+
+  #Set log levels, default: info (info|error|warn) 
+  #Log_Level = "info"
+
+  #Set custom log directory for storing ntui app logs
+  #Log_Dir = ""
+
+  #Set ntui screen table data refresh rate, default: 5
+  #Refresh_Rate = 5
+
+  #Set Nomad HTTP authentication credentials, format username:password
+  #Nomad_Http_Auth = ""
+
+  #Set Nomad Server URL
+  Nomad_Server_Base_Url = ""
+
+  #Set Nomad ACL Token
+  #Nomad_Token = ""
+
+  #Set Default Nomad Cluster Region
+  Nomad_Region = ""
+
+  #Set Default Nomad Region's Namespace
+  Nomad_Namespace = ""
+
+  #Set Nomad CA certificate
+  #Nomad_Cacert = ""
+
+  #Set Nomad CA path
+  #Nomad_Capath = ""
+
+  #Set Nomad Client Certificate
+  #Nomad_Client_Cert = ""
+
+  #Set Nomad Client Certificate Key
+  #Nomad_Client_Key = ""
+
+  #Set Nomad TLS server
+  #Nomad_Tls_Server = ""
+
+  #Set If skip certificate verify
+  #Nomad_Skip_Verify = false
 ```
 
 ### Commands:

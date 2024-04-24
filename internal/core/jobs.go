@@ -21,7 +21,7 @@ func NewJobs(app *App) *Jobs {
 		App:	app,
 	}
 	j.App.Layout.Body.AddPageX(j.GetTitle(), j, true, false)
-	j.Listener = utils.NewListener(j.Refresher)
+	j.Listener = utils.NewListener(app.Config.RefreshRate, j.Refresher)
 	j.SetOnSelectFn(j.OnRowSelected)
 	j.SetOnSelectionChanged(j.OnSelectionChanged)
 	j.SetFocusFunc(j.OnFocus)
@@ -90,13 +90,13 @@ func (j *Jobs) StopModal() {
 	title := fmt.Sprintf("Are you sure to stop job %s?", j.SelectedValue["name"])
 	confirmModal.SetTitle(title)
 	confirmModal.SetData(j.SelectedValue)
-	confirmModal.AddButtons([]string{"Stop", "Cancel"})
+	confirmModal.AddButtons([]string{"Cancel", "Stop"})
 	confirmModal.SetResponseFunc(j.HandleStopModalResponse)
 	j.App.Layout.OpenPage("modal", true)
 }
 
 func (j *Jobs) HandleStopModalResponse(index int, label string) {
-	if index == 0 && label == "Stop" {
+	if index == 1 && label == "Stop" {
 		params := &models.NomadParams{
 			Region:		j.App.Config.GetRegion(),
 			Namespace:	j.App.Config.GetNamespace(),
@@ -120,13 +120,13 @@ func (j *Jobs) StartModal() {
 	title := fmt.Sprintf("Are you sure to start job %s?", j.SelectedValue["name"])
 	confirmModal.SetTitle(title)
 	confirmModal.SetData(j.SelectedValue)
-	confirmModal.AddButtons([]string{"Start", "Cancel"})
+	confirmModal.AddButtons([]string{"Cancel", "Start"})
 	confirmModal.SetResponseFunc(j.HandleStartpModalResponse)
 	j.App.Layout.OpenPage("modal", true)
 }
 
 func (j *Jobs) HandleStartpModalResponse(index int, label string) {
-	if index == 0 && label == "Start" {
+	if index == 1 && label == "Start" {
 		params := &models.NomadParams{
 			Region:		j.App.Config.GetRegion(),
 			Namespace:	j.App.Config.GetNamespace(),

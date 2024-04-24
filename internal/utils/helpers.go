@@ -72,7 +72,7 @@ func DateTimeDiff(dateTime time.Time) string {
 	Minutes := MinFraction * 60
 	Minutes, SecFraction := math.Modf(Minutes)
 	Seconds := SecFraction * 60
-	Diff := fmt.Sprintf("%shrs %smins %ssecs ago", fmt.Sprint(Hours), fmt.Sprint(Minutes), fmt.Sprint(math.Floor(Seconds)))
+	Diff := fmt.Sprintf("%sh%sm%ss ago", fmt.Sprint(Hours), fmt.Sprint(Minutes), fmt.Sprint(math.Floor(Seconds)))
 	return Diff
 }
 

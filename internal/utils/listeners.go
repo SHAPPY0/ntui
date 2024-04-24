@@ -10,18 +10,20 @@ type Listener struct {
 	Ticker 			*time.Ticker
 	StopChan 		chan bool
 	Function 		func()
+	RefreshRate 	time.Duration
 }
 
-func NewListener(fn func()) *Listener {
+func NewListener(rr int, fn func()) *Listener {
 	l := &Listener{
 		StopChan:		make(chan bool),
 		Function: 		fn,
+		RefreshRate: 	time.Duration(rr),
 	}
 	return l
 }
 
 func (l *Listener) Listen() {
-	l.Ticker = time.NewTicker(5 * time.Second)
+	l.Ticker = time.NewTicker(l.RefreshRate * time.Second)
 	AllListeners = append(AllListeners, l)
 	go func() {
 		for {

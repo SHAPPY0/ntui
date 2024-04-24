@@ -20,7 +20,7 @@ func NewTaskGroups(app *App) *TaskGroups {
 		App:			app,
 	}
 	tg.App.Layout.Body.AddPageX(tg.GetTitle(), tg, true, false)
-	tg.Listener = utils.NewListener(tg.Refresher)
+	tg.Listener = utils.NewListener(app.Config.RefreshRate, tg.Refresher)
 	tg.SetOnSelectFn(tg.OnRowSelected)
 	tg.TaskGroups.SetBlurFunc(tg.OnBlur)
 	tg.TaskGroups.SetFocusFunc(tg.OnFocus)
