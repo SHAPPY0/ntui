@@ -3,13 +3,15 @@ package core
 import (
 	"fmt"
 	"os"
+	"io/ioutil"
 	"errors"
-	// "io/ioutil"
-	// "encoding/json"
 	"reflect"
 	"github.com/spf13/cobra"
 	"github.com/BurntSushi/toml"
+	"github.com/akiyosi/tomlwriter"
 )
+
+var defaultConfigPath = ""
 
 const (
 	AppName = "ntui"
@@ -134,6 +136,7 @@ func (c *Config) Load(flags Flags) (*Config, error) {
 	if configPath == "" {
 		panic(fmt.Errorf("No config file found"))
 	}
+	defaultConfigPath = configPath 
 	if _, err := os.Stat(configPath); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil, fmt.Errorf("Invalid config file path")
@@ -209,4 +212,18 @@ func (f *Flags) ParseCommand(cmd *cobra.Command) *Flags {
 	f.Token = token
 
 	return f
+}
+
+func (c *Config) UpdateConfigFile(key, newValue, oldValue string) {
+	if defaultConfigPath != "" {
+		file, _ := ioutil.ReadFile(defaultConfigPath)
+		file, _ = tomlwriter.WriteValue(
+			newValue, 
+			file, 
+			nil, 
+			key, 
+			oldValue,
+		)
+	}
+
 }

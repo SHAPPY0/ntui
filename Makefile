@@ -6,7 +6,7 @@ DIRNAME			:= .$(NAME)
 CONFIGFILE		:= config.toml
 HOMEDIR			:= ""
 HELPFORMAT		:= "  \033[36m%-25s\033[0m %s\n"
-VERSION			?= v0.01
+VERSION			?= v1.0.0
 GIT_REV 		:= $(shell git rev-parse --short HEAD)
 GO_LDFLAGS 		:= "$(GO_LDFLAGS) -X $(PACKAGE)/cmd.Version=$(VERSION) -X $(PACKAGE)/cmd.Commit=$(GIT_REV)"
 OUTPUT			:= ./bin/$(NAME)
@@ -64,9 +64,22 @@ endif
 
 build: ## Build ntui
 	@echo "==> Building ntui"
-	@CGO_ENABLED=0 go build -ldflags $(GO_LDFLAGS) -o $(OUTPUT)
-	@go install
-	@echo "Build Done!"
+	@go build -ldflags $(GO_LDFLAGS) -o $(OUTPUT)
+
+	@if echo $(PATH) | grep -q "/usr/local/bin"; then \
+		if cp $(OUTPUT) /usr/local/bin ; then \
+			echo ""; \
+			echo "Done!"; \
+			exit 0; \
+		else \
+			echo ""; \
+			if sudo cp $(OUTPUT) /usr/local/bin ; then \
+				echo ""; \
+				echo "Done!"; \
+				exit 0; \
+			fi \
+		fi; \
+	fi \
 
 .PHONY: clean
 

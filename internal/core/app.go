@@ -34,7 +34,7 @@ type PrimitivesX struct {
 
 func NewApp(config *Config, logger *utils.Logger) (*App, error) {
 	a := &App{
-		Version:		"1.0",
+		Version:		"v1.0.0",
 		Config:			config,
 		Layout:			NewLayout(),
 		Alert:			utils.NewAlert(),

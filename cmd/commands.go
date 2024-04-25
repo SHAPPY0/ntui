@@ -3,11 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-	// "bytes"
 	"reflect"
-	"io/ioutil"
-	"encoding/json"
 	"github.com/spf13/cobra"
+	"github.com/BurntSushi/toml"
 	"github.com/shappy0/ntui/internal/core"
 )
 
@@ -37,39 +35,28 @@ func configCmd() *cobra.Command {
 }
 
 func ShowConfigs() {
-	var (
-		Configs 		core.Config
-		// PrettyConfig	bytes.Buffer
-	)
-	ConfigPath := os.Getenv("CONFIG_PATH") 
-	if ConfigPath == "" {
-		HomeDir, _ := os.UserHomeDir()
-		ConfigPath = fmt.Sprintf("%s/%s/%s", HomeDir, core.DefaultConfigDir, core.DefaultConfigFile)
+	var config  core.Config
+	configPath := os.Getenv("CONFIG_PATH") 
+	if configPath == "" {
+		homeDir, _ := os.UserHomeDir()
+		configPath = fmt.Sprintf("%s/%s/%s", homeDir, core.DefaultConfigDir, core.DefaultConfigFile)
 	}
-	ConfigJson, Err := ioutil.ReadFile(ConfigPath)
-	if Err != nil {
-		panic(Err)
+	if _, err := os.Stat(configPath); err != nil {
+		panic("No configs found")
 	}
-	if Err = json.Unmarshal([]byte(ConfigJson), &Configs); Err != nil {
-		panic(Err)
+	_, err := toml.DecodeFile(configPath, &config)
+	if err != nil {
+		fmt.Println(err)
 	}
-
-	CTypes := reflect.TypeOf(Configs)
-	CValues := reflect.ValueOf(Configs)
-	for I := 0; I < CTypes.NumField(); I++ {
-		key := CTypes.Field(I)
-		value := CValues.Field(I)
+	cTypes := reflect.TypeOf(config)
+	cValues := reflect.ValueOf(config)
+	for i := 0; i < cTypes.NumField(); i++ {
+		key := cTypes.Field(i)
+		value := cValues.Field(i)
 		var printValue interface{} 
 		if value.Interface() != "" {
 			printValue = value.Interface()
 		}
-		fmt.Printf("%s = %v\n", key.Name, printValue)
+		fmt.Printf("%s=%v\n", key.Name, printValue)
 	}
-
-	// ConfigJson, Err = json.Marshal(Configs)
-	// if Err = json.Indent(&PrettyConfig, ConfigJson, "", "\t"); Err != nil {
-	// 	panic(Err)
-	// }
-	// fmt.Println(string(PrettyConfig.Bytes()))
-	
 }
