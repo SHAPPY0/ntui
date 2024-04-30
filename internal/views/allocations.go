@@ -18,6 +18,7 @@ type Allocations struct {
 
 var AllocMenu = []widgets.Item{
 	widgets.RestartTaskMenu,
+	widgets.LogMenu,
 }  
 
 func NewAllocations() *Allocations {

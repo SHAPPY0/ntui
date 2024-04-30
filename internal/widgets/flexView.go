@@ -23,6 +23,10 @@ func (f *Flex) AddItemX(primitive tview.Primitive, fixedSize, proportion int, fo
 	f.AddItem(primitive, fixedSize, proportion, focus)
 }
 
+func (f *Flex) FullScreen(on bool) {
+	f.SetFullScreen(on)
+}
+
 func (f *Flex) SetTitleX(title, a string) {
 	if a != "" {
 		f.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s) ", utils.ColorT70d5bf, strings.ToUpper(title), a))

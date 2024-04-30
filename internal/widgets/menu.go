@@ -92,6 +92,11 @@ var (
 		Icon:		"1",
 		Description: "Nodes",
 	}
+	LogAutoScrollMenu = Item{
+		Name:		"log_autoscroll",
+		Icon:		"a",
+		Description: "Log Autoscroll",
+	}
 )
 
 var DefaultMenus = []Item{

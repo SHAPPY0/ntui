@@ -31,9 +31,9 @@ func NewLog(app *App) *Log {
 		DefaultType:	LOG_STDOUT,
 		Follow:			true,
 	}
-	l.App.Layout.Body.AddPageX(l.GetTitle(), l, true, false)
-	l.SetFocusFunc(l.OnFocus)
-	l.SetBlurFunc(l.OnBlur)
+	l.App.Layout.Body.AddPageX(l.GetTitle(), l.LogView, true, false)
+	l.LogView.SetFocusFunc(l.OnFocus)
+	l.LogView.SetBlurFunc(l.OnBlur)
 	return l
 }
 
@@ -66,6 +66,10 @@ func (l *Log) UpdateMenu() {
 		l.App.Layout.Header.Menu.Remove(l.Menus[0])
 		l.App.Layout.Header.Menu.Add(l.Menus[1], true)
 	}
+	for _, m := range l.Menus[2:] {
+		l.App.Layout.Header.Menu.Add(m, true)
+	}
+	
 }
 
 func (l *Log) OnFocus() {
@@ -73,14 +77,16 @@ func (l *Log) OnFocus() {
 	l.UpdateMenu()
 	allocName := l.SelectedAlloc.Name
 	allocID := utils.GetID(l.SelectedAlloc.ID)
-	l.SetTitleName(l.GetTitle() + "-" + l.DefaultType)
-	l.SetTextVTitle(allocID, allocName)
+	l.LogView.SetTitleName(l.GetTitle() + "-" + l.DefaultType)
+	l.LogView.SetTextVTitle(allocID, allocName)
 	l.StopLogChan = make(chan struct{})
 	l.FetchLog()
+	
 }
 
 func (l *Log) FetchLog() {
 	l.App.Alert.Loader(true)
+	l.ClearLogs()
 	LogChan, ErrChan := l.App.NomadClient.Logs(
 		l.SelectedAlloc.ID,
 		l.SelectedAlloc.TaskName,
@@ -93,7 +99,6 @@ func (l *Log) FetchLog() {
 	if l.Follow {
 		l.FollowX()
 	}
-	l.ClearLogs()
 	l.App.Alert.Loader(false)
 	go l.StartLogStream(LogChan, ErrChan)
 }
@@ -107,6 +112,9 @@ func (l *Log) StartLogStream(logChan <-chan *api.StreamFrame, errChan <-chan err
 			}
 			l.Render(Log.Data)
 			l.App.Layout.Draw()
+		case _ = <-l.StopLogChan:
+			// l.ClearLogs()
+			return
 		case Err := <-errChan:
 			l.App.Alert.Error(Err.Error())
 			return
@@ -124,15 +132,17 @@ func (l *Log) SetLogType(logType string) {
 
 func (l *Log) SetFollow(follow bool) {
 	l.Follow = follow
+	l.FollowX()
 }
 
 func (l *Log) OnBlur() {
 	l.StopLogStream()
 	if l.DefaultType == LOG_STDOUT {
-		l.App.Layout.Header.Menu.Remove(widgets.StderrMenu)
+		l.App.Layout.Header.Menu.Remove(l.Menus[1])
 	} else {
-		l.App.Layout.Header.Menu.Remove(widgets.StdoutMenu)
+		l.App.Layout.Header.Menu.Remove(l.Menus[0])
 	}
+	l.App.Layout.Header.Menu.RemoveMenus(l.Menus[2:])
 }
 
 func (l *Log) FetchStdOutLog() {
@@ -145,4 +155,8 @@ func (l *Log) FetchStdErrLog() {
 	l.DefaultType = LOG_STDERR
 	l.StopLogStream()
 	l.OnFocus()
+}
+
+func (l *Log) ShowFullScreen(fs bool) {
+	l.Container.FullScreen(fs)
 }

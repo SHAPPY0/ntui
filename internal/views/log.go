@@ -5,7 +5,8 @@ import (
 )
 
 type Log struct {
-	*widgets.TextView
+	Container	*widgets.Flex
+	LogView   	*widgets.TextView
 	Title 		string
 	Log 		[]byte
 	Menus 		[]widgets.Item
@@ -16,19 +17,22 @@ var TitleLog = "log"
 var LogMenu = []widgets.Item{
 	widgets.StdoutMenu,
 	widgets.StderrMenu,
+	widgets.LogAutoScrollMenu,
 }
 
 func NewLog() *Log {
 	l := &Log{
-		TextView:		widgets.NewTextView(TitleLog),
+		Container:		widgets.NewFlex(),
+		LogView:		widgets.NewTextView(TitleLog),
 		Title:			TitleLog,
 		Menus:			LogMenu,
 	}
+	l.Container.AddItemX(l.LogView, 0, 1, true)
 	return l
 }
 
 func (l *Log) FollowX() {
-	l.ScrollToEnd()
+	l.LogView.ScrollToEnd()
 }
 
 func (l *Log) GetTitle() string {
@@ -37,9 +41,10 @@ func (l *Log) GetTitle() string {
 
 func (l *Log) Render(log []byte) {
 	l.Log = append(l.Log, log...)
-	l.SetText(string(l.Log))
+	l.LogView.SetText(string(l.Log))
 }
 
 func (l *Log) ClearLogs() {
 	l.Log = make([]byte, 0)
+	l.Container.ClearFlex()
 }

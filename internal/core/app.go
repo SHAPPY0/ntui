@@ -117,7 +117,7 @@ func BindAppKeys(app *App) {
 				}
 				break
 			case 'l':
-				if app.Layout.GetActivePage() == "tasks" {
+				if app.Layout.GetActivePage() == "tasks" || app.Layout.GetActivePage() == "allocations" {
 					app.Layout.OpenPage("log", true)
 				}
 				break
@@ -129,6 +129,16 @@ func BindAppKeys(app *App) {
 			case 'o':
 				if app.Layout.GetActivePage() == "log" {
 					app.Primitives.Log.FetchStdOutLog()
+				}
+				break
+			case 'a':
+				if app.Layout.GetActivePage() == "log" {
+					app.Primitives.Log.SetFollow(true)
+				}
+				break
+			case 'f':
+				if app.Layout.GetActivePage() == "log" {
+					app.Primitives.Log.ShowFullScreen(true)
 				}
 				break
 			}
