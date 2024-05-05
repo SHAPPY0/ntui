@@ -15,6 +15,7 @@ type Allocations struct {
 	Listener		*utils.Listener
 	SelectedValue	map[string]string
 	TaskGroup		map[string]string
+	SelectedAlloc   models.Allocations
 	Data			[]models.Allocations
 }
 
@@ -32,11 +33,11 @@ func NewAllocations(app *App) *Allocations {
 }
 
 func (a *Allocations) OnRowSelected(row, col int) {
-	a.SelectedValue = a.GetSelectedItem()
+	a.SetSelectedRow()
 	a.App.Alert.Loader(true)
 	go func() {
 		a.App.Layout.QueueUpdateDraw(func() {
-			a.App.Layout.OpenPage("tasks", true)
+			a.App.Layout.OpenPage(a.App.Primitives.Tasks.GetTitle(), true)
 			a.App.Alert.Loader(false)
 		})
 	}()
@@ -58,8 +59,13 @@ func (a *Allocations) UpdateTable(data map[string]string) {
 }
 
 func (a *Allocations) OnFocus() {
-	a.App.Layout.Header.Menu.RenderMenu(a.Menus)
+	a.App.Layout.Header.Menu.RenderMenu(a.Menus, true)
 	go a.Listener.Listen()
+}
+
+func (a *Allocations) SetSelectedRow() {
+	a.SelectedValue = a.GetSelectedItem()
+	a.SelectedAlloc, _ = a.GetAllocationData(a.SelectedValue["id"])
 }
 
 func (a *Allocations) OnBlur() {
@@ -74,9 +80,9 @@ func (a *Allocations) Refresher() {
 
 func (a *Allocations) GetAllocationData(id string) (models.Allocations, bool) {
 	if id != "" {
-		for I := 0; I < len(a.Data); I++ {
-			if strings.HasPrefix(a.Data[I].ID, id) {
-				return a.Data[I], true
+		for i := 0; i < len(a.Data); i++ {
+			if strings.HasPrefix(a.Data[i].ID, id) {
+				return a.Data[i], true
 			}
 		}
 	}
@@ -94,10 +100,12 @@ func (a *Allocations) HandleButtonResponse(index int, label string) {
 			}
 			if Err := a.App.NomadClient.Restart(Allocations.ID, Allocations.TaskName, Params); Err != nil {
 				a.App.Alert.Loader(false)
-				a.App.Alert.Error(Err.Error())
+				a.App.Logger.Errorf("Error: While restarting %s task: %s", a.SelectedValue["name"], Err.Error())
+				a.App.Alert.Error("Restart request failed...")
 			} else {
 				a.App.Alert.Loader(false)
 				Msg := fmt.Sprintf("Task %s/%s restarted successfully...", a.SelectedValue["id"], a.SelectedValue["name"])
+				a.App.Logger.Info(Msg)
 				a.App.Alert.Info(Msg)
 			}
 			a.App.Layout.GoBack()

@@ -42,6 +42,8 @@ func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 				Summary.Running++
 			}
 		}
+		job, _ := n.GetJob(Job.ID)
+		
 		var J models.Jobs
 		J.ID 			=	Job.ID
 		J.Name			=	Job.Name
@@ -52,6 +54,7 @@ func (n *Nomad) Jobs(params *models.NomadParams) ([]models.Jobs, error) {
 		J.Priority		=	Job.Priority
 		J.StatusSummary = 	Summary
 		J.SubmitTime	=	time.Unix(0, Job.SubmitTime)
+		J.Version		= 	job.Version
 
 		Result = append(Result, J)
 	}
@@ -89,8 +92,17 @@ func (n *Nomad) TaskGroups(jobId, region, namespace string) ([]models.TaskGroups
 	return Result, nil
 }
 
-//TODO: Implement Later, Submission(Definitions) required current job version
-func (n *Nomad) Submission() {}
+//Get Definitionn of Job(.hcl source file)
+func (n *Nomad) Submission(jobId, version string, params *models.NomadParams) (*api.JobSubmission, error) {
+	data, _, err := n.JobClient.Submission(jobId, utils.StrToInt(version), &api.QueryOptions{
+		Region:		params.Region,
+		Namespace:	params.Namespace,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
 
 //Get versions List by jobId
 func (n *Nomad) Versions(jobId string, params *models.NomadParams) ([]models.JobVersion, []models.JobVersionDiff, error) {

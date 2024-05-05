@@ -51,7 +51,7 @@ func (h *Header) RenderLogo() error {
 
 func (h *Header) RenderMenu(menus []widgets.Item) error {
 	h.Menu.RenderGlobalMenus()
-	h.Menu.RenderMenu(menus)
+	h.Menu.RenderMenu(menus, true)
 	return nil
 }
 

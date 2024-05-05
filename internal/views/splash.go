@@ -11,6 +11,7 @@ var TitleSplash = "splash"
 type Splash struct {
 	*tview.Flex
 	Title 		string
+	Version		string
 }
 
 var Logo = []string{
@@ -20,10 +21,11 @@ var Logo = []string{
 	`(_)\_) (__) (______)(____)`,
 }
 
-func NewSplash() *Splash {
+func NewSplash(version string) *Splash {
 	s := &Splash{
 		Flex:	tview.NewFlex(),
 		Title:	TitleSplash,
+		Version:	version,
 	}
 	s.SetDirection(tview.FlexRow)
 	LogoV := tview.NewTextView()
@@ -35,7 +37,7 @@ func NewSplash() *Splash {
 	Version.SetDynamicColors(true)
 	Version.SetTextAlign(tview.AlignCenter)
 
-	s.DrawVersion(Version, "0.1")
+	s.DrawVersion(Version, s.Version)
 
 	s.AddItem(LogoV, 10, 1, false)
 	s.AddItem(Version, 1, 1, false)

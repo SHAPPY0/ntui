@@ -16,6 +16,8 @@ func NewModal() *Modal {
 		Modal:	tview.NewModal(),
 	}
 	m.SetBackgroundColor(utils.ColorOrange)
+	m.SetButtonBackgroundColor(utils.ColorOrange)
+	m.SetBorder(false)
 	return m
 }
 

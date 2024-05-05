@@ -30,13 +30,14 @@ type PrimitivesX struct {
 	VersionDiff 	*VersionDiff
 	Nodes 			*Nodes
 	Modal 			*Modal
+	JobDefinition	*JobDefinition
 }
 
-func NewApp(config *Config, logger *utils.Logger) (*App, error) {
+func NewApp(version string, config *Config, logger *utils.Logger) (*App, error) {
 	a := &App{
-		Version:		"v1.0.0",
+		Version:		version,
 		Config:			config,
-		Layout:			NewLayout(),
+		Layout:			NewLayout(version),
 		Alert:			utils.NewAlert(),
 		Logger:			logger,
 	}
@@ -62,6 +63,7 @@ func (app *App) Init() error {
 		VersionDiff:	NewVersionDiff(app),
 		Nodes:			NewNodes(app),
 		Modal:			NewModal(app),
+		JobDefinition:	NewJobDefinition(app),
 	}
 	app.Primitives.Main  = NewMain(app)
 	BindAppKeys(app)
@@ -74,70 +76,74 @@ func BindAppKeys(app *App) {
 	app.Layout.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case utils.NtuiExitKey.Key:
-			app.Logger.Info("Stopping Ntui ...")
+			app.Logger.Info("Stopping ntui by user ...")
 			app.StopX()
 			break
 		case utils.NtuiEscKey.Key:
 			app.Layout.GoBack()
 			break
-		// case utils.NtuiCtrlRKey.Key:
-		// 	app.Layout.OpenPage("main", false)
-		// 	break
 		case utils.NtuiCtrlVKey.Key:
-			if app.Layout.GetActivePage() == "versions" {
+			if app.Layout.GetActivePage() == app.Primitives.Versions.GetTitle() {
 				app.Primitives.Versions.ConfirmModal()
 			}
 			break
 		case utils.NtuiCtrlTKey.Key:
-			if app.Layout.GetActivePage() == "allocations" || app.Layout.GetActivePage() == "tasks" {
+			if app.Layout.GetActivePage() == app.Primitives.Allocations.GetTitle() || app.Layout.GetActivePage() == app.Primitives.Tasks.GetTitle() {
 				app.Primitives.Allocations.InitRestartModal()
 			}
 			break
 		case utils.NtuiCtrlQKey.Key:
-			if app.Layout.GetActivePage() == "jobs" {
+			if app.Layout.GetActivePage() == app.Primitives.Jobs.GetTitle() {
 				app.Primitives.Jobs.StopModal()
 			}
 			break
 		case utils.NtuiCtrlSKey.Key:
-			if app.Layout.GetActivePage() == "jobs" {
+			if app.Layout.GetActivePage() == app.Primitives.Jobs.GetTitle() {
 				app.Primitives.Jobs.StartModal()
 			}
 			break
 		case utils.NtuiRuneKey.Key:
 			switch event.Rune() {
 			case '1':
-				app.Layout.OpenPage("nodes", true)
+				app.Layout.OpenPage(app.Primitives.Nodes.GetTitle(), true)
 				break
 			case '2':
-				app.Layout.OpenPage("main", false)
+				app.Layout.OpenPage(app.Primitives.Main.GetTitle(), false)
 				break
 			case 'v':
-				if app.Layout.GetActivePage() == "taskgroups" {
-					app.Layout.OpenPage("versions", true)
+				if app.Layout.GetActivePage() == app.Primitives.TaskGroups.GetTitle() {
+					app.Layout.OpenPage(app.Primitives.Versions.GetTitle(), true)
+				}
+				break
+			case 'd':
+				if app.Layout.GetActivePage() == app.Primitives.Jobs.GetTitle() {
+					app.Primitives.Jobs.GoToDefinitions()
 				}
 				break
 			case 'l':
-				if app.Layout.GetActivePage() == "tasks" || app.Layout.GetActivePage() == "allocations" {
-					app.Layout.OpenPage("log", true)
+				if app.Layout.GetActivePage() == app.Primitives.Tasks.GetTitle() || app.Layout.GetActivePage() == app.Primitives.Allocations.GetTitle() {
+					app.Primitives.Allocations.SetSelectedRow()
+					app.Primitives.Log.SetPageSource(app.Layout.GetActivePage())
+					app.Layout.OpenPage(app.Primitives.Log.GetTitle(), true)
 				}
 				break
 			case 'e':
-				if app.Layout.GetActivePage() == "log" {
+				if app.Layout.GetActivePage() == app.Primitives.Log.GetTitle() {
 					app.Primitives.Log.FetchStdErrLog()
 				}
 				break
 			case 'o':
-				if app.Layout.GetActivePage() == "log" {
+				if app.Layout.GetActivePage() == app.Primitives.Log.GetTitle() {
 					app.Primitives.Log.FetchStdOutLog()
 				}
 				break
 			case 'a':
-				if app.Layout.GetActivePage() == "log" {
+				if app.Layout.GetActivePage() == app.Primitives.Log.GetTitle() {
 					app.Primitives.Log.SetFollow(true)
 				}
 				break
 			case 'f':
-				if app.Layout.GetActivePage() == "log" {
+				if app.Layout.GetActivePage() == app.Primitives.Log.GetTitle() {
 					app.Primitives.Log.ShowFullScreen(true)
 				}
 				break

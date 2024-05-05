@@ -28,7 +28,7 @@ func NewTaskGroups(app *App) *TaskGroups {
 }
 
 func (tg *TaskGroups) OnFocus() {
-	tg.App.Layout.Header.Menu.RenderMenu(tg.Menus)
+	tg.App.Layout.Header.Menu.RenderMenu(tg.Menus, true)
 	go tg.Listener.Listen()
 }
 

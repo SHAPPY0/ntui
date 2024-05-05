@@ -17,6 +17,7 @@ type Log struct {
 	DefaultType		string
 	Follow			bool
 	StopLogChan		chan struct{}
+	PageSource 		*string
 }
 
 const (
@@ -30,11 +31,16 @@ func NewLog(app *App) *Log {
 		App:			app,
 		DefaultType:	LOG_STDOUT,
 		Follow:			true,
+		PageSource:		*new(*string),
 	}
 	l.App.Layout.Body.AddPageX(l.GetTitle(), l.LogView, true, false)
 	l.LogView.SetFocusFunc(l.OnFocus)
 	l.LogView.SetBlurFunc(l.OnBlur)
 	return l
+}
+
+func (l *Log) SetPageSource(s string) {
+	l.PageSource = &s
 }
 
 func (l *Log) BindInputCapture() {
@@ -74,26 +80,27 @@ func (l *Log) UpdateMenu() {
 
 func (l *Log) OnFocus() {
 	l.SelectedAlloc = l.App.Primitives.Tasks.SelectedValue
+	if *l.PageSource == l.App.Primitives.Allocations.GetTitle() {
+		l.SelectedAlloc = l.App.Primitives.Allocations.SelectedAlloc
+	}
 	l.UpdateMenu()
-	allocName := l.SelectedAlloc.Name
-	allocID := utils.GetID(l.SelectedAlloc.ID)
 	l.LogView.SetTitleName(l.GetTitle() + "-" + l.DefaultType)
-	l.LogView.SetTextVTitle(allocID, allocName)
+	l.LogView.SetTextVTitle(utils.GetID(l.SelectedAlloc.ID), l.SelectedAlloc.TaskName)
 	l.StopLogChan = make(chan struct{})
-	l.FetchLog()
-	
+	l.FetchLog()	
 }
 
 func (l *Log) FetchLog() {
 	l.App.Alert.Loader(true)
 	l.ClearLogs()
+	l.App.Logger.Infof("Fetching log for taskname: %s", l.SelectedAlloc.TaskName)
 	LogChan, ErrChan := l.App.NomadClient.Logs(
 		l.SelectedAlloc.ID,
 		l.SelectedAlloc.TaskName,
 		l.DefaultType,
 		"end",
 		l.Follow,
-		10000,
+		50000,
 		l.StopLogChan,
 	)
 	if l.Follow {
@@ -106,17 +113,18 @@ func (l *Log) FetchLog() {
 func (l *Log) StartLogStream(logChan <-chan *api.StreamFrame, errChan <-chan error) {
 	for {
 		select {
-		case Log := <-logChan:
-			if Log == nil {
+		case log := <-logChan:
+			if log == nil {
 				return
 			}
-			l.Render(Log.Data)
+			l.Render(log.Data)
 			l.App.Layout.Draw()
 		case _ = <-l.StopLogChan:
 			// l.ClearLogs()
 			return
-		case Err := <-errChan:
-			l.App.Alert.Error(Err.Error())
+		case err := <-errChan:
+			l.App.Logger.Errorf("Error getting log: %s", err.Error())
+			l.App.Alert.Error(err.Error())
 			return
 		}
 	}

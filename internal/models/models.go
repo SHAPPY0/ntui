@@ -46,6 +46,7 @@ type Jobs struct {
 	StatusSummary 		Summary
 	Priority			int
 	SubmitTime			time.Time
+	Version 			*uint64
 }
 
 type Summary struct {

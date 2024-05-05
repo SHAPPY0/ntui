@@ -30,7 +30,7 @@ func NewVersions(app *App) *Versions {
 }
 
 func (v *Versions) OnFocus() {
-	v.App.Layout.Header.Menu.RenderMenu(v.Menus)
+	v.App.Layout.Header.Menu.RenderMenu(v.Menus, true)
 	v.UpdateTable()
 }
 
@@ -91,11 +91,13 @@ func (v *Versions) HandleModalResponse(index int, label string) {
 		version := utils.IntToUint64(utils.StrToInt(verNum[1]))
 		if err := v.App.NomadClient.Revert(v.JobId, version, Params); err != nil {
 			v.App.Alert.Loader(false)
-			v.App.Alert.Error(err.Error())
+			v.App.Alert.Error("Version revert failed...")
+			v.App.Logger.Errorf("Version revert failed: %s", err.Error())
 		} else {
 			v.App.Alert.Loader(false)
 		    msg := fmt.Sprintf("Version %s %s reverted successful...", v.JobId, v.SelectedValue["version"])
 		    v.App.Alert.Info(msg)
+			v.App.Logger.Info(msg)
 		}
 	}
 	v.App.Layout.GoBack()

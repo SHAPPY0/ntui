@@ -130,35 +130,41 @@ Below are the falgs which can be passed while running ntui -
 #### Keys:
 
 ##### Global Keys
-<`1`>: To view Nodes
+`<1>`: To view Nomad Nodes
 
-<`2`>: To view regions and namespaces 
+`<2>`: To view/change regions and namespaces 
 
-<`esc`>: To go back to previous screen
+`<esc>`: To go back to previous screen
 
-<`enter`>: To select the row
+`<enter>`: To select the row
 
 ##### Jobs Screen
-<`ctrl+q`>: To stop job
+`<ctrl+q>`: To stop job
 
-<`ctrl+s`>: To start job
+`<ctrl+s>`: To start job
+
+`<d>`: View job's definition
+
+`<ctrl+d>`: Run new job
 
 ##### TaskGroups Screen
-<`v`>: To view job verions
+`<v>`: To view job versions
 
 ##### Versions Screen
-<`ctrl+v`>: To revert the selected job verions
+`<ctrl+v>`: To revert the selected job versions
 
 ##### Allocations Screen
-<`ctrl+t`>: To restart selected task.
+`<ctrl+t>`: To restart selected task.
+
+`<l>`: View logs of selected alloc.
 
 ##### Tasks Screen
-<`ctrl+t`>: To restart selected task.
+`<ctrl+t>`: To restart selected task.
 
-<`l`>: To view logs of selected task.
+`<l>`: To view logs of selected task.
 
 ##### Logs Screen
-<`e`>: To view stderr logs.
+`<e>`: To view stderr logs.
 
-<`o`>: To view stdout logs.
+`<o>`: To view stdout logs.
 

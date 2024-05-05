@@ -11,7 +11,7 @@ type Splash struct {
 
 func NewSplash(app *App) *Splash {
 	s := &Splash{
-		Splash:		views.NewSplash(),
+		Splash:		views.NewSplash(app.Version),
 		App:		app,
 	}
 	s.App.Layout.Body.AddPageX(s.GetTitle(), s, true, false)

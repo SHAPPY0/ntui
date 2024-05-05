@@ -63,7 +63,7 @@ func Init(cmd *cobra.Command, args []string) error {
 
 	var logger = utils.NewLogger(config.LogLevel, logFile)
 
-	app, err := core.NewApp(config, logger)
+	app, err := core.NewApp(Version, config, logger)
 	if err != nil {
 		return err
 	}

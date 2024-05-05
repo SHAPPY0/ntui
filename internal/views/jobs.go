@@ -18,13 +18,14 @@ type Jobs struct {
 
 var JobsMenu = []widgets.Item{
 	widgets.StopJobMenu,
+	widgets.DefinitionMenu,
 }  
 
 func NewJobs() *Jobs {
 	j := &Jobs{
 		Table: 		widgets.NewTable(TitleJobs),
 		Title:		TitleJobs,
-		Headers:	[]string{"name", "status", "type", "groups", "priority"},
+		Headers:	[]string{"name", "status", "type", "version", "groups", "priority"},
 		Menus: 		JobsMenu,
 	}
 
@@ -57,7 +58,8 @@ func (j *Jobs) UpdateTableData(params *models.NomadParams, data []models.Jobs) {
 		j.Table.DrawCell(I + 1, 0, j.Data[I].Name, CellColor)
 		j.Table.DrawCell(I + 1, 1, Status, CellColor)
 		j.Table.DrawCell(I + 1, 2, j.Data[I].Type, CellColor)
-		j.Table.DrawCell(I + 1, 3, utils.IntToStr(j.Data[I].StatusSummary.Total), CellColor)
-		j.Table.DrawCell(I + 1, 4, utils.IntToStr(j.Data[I].Priority), CellColor)
+		j.Table.DrawCell(I + 1, 3, utils.IntToStr(int(*j.Data[I].Version)), CellColor)
+		j.Table.DrawCell(I + 1, 4, utils.IntToStr(j.Data[I].StatusSummary.Total), CellColor)
+		j.Table.DrawCell(I + 1, 5, utils.IntToStr(j.Data[I].Priority), CellColor)
 	}
 }

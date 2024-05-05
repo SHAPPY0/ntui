@@ -38,6 +38,9 @@ func (p *Pages) OpenPageX(name string, addHistory bool) {
 	if addHistory && p.ActivePage != "" {
 		p.AddHistory(p.ActivePage)
 	}
+	if name == "main" && len(p.History) > 0 {
+		p.FlushHistory()
+	}
 	p.SwitchToPage(name)
 	p.ActivePage = name
 }
@@ -60,4 +63,11 @@ func (p *Pages) HistoryPop() string {
 	PageName := p.History[LastIndex]
 	p.History = p.History[:LastIndex]
 	return PageName
+}
+
+func (p *Pages) FlushHistory() {
+	for i := range(len(p.History)) {
+		_ = i
+		p.HistoryPop()
+	}
 }

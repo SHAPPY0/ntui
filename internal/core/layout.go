@@ -18,11 +18,11 @@ type Layout struct {
 	Footer			*views.Footer
 }
 
-func NewLayout() *Layout {
+func NewLayout(version string) *Layout {
 	l := &Layout{
 		App:		views.NewApp(),
 		MainLayout:	tview.NewFlex(),
-		Splash:		views.NewSplash(),
+		Splash:		views.NewSplash(version),
 		Header:		views.NewHeader(),
 		Body:		widgets.NewPages(),
 		Footer:		views.NewFooter(),

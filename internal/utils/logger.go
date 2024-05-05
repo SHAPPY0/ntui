@@ -13,11 +13,12 @@ type Logger struct {
 }
 
 func NewLogger(logLevel string, file *os.File) *Logger {
-	multiWriter := io.MultiWriter(file, os.Stdout)
+	multiWriter := io.MultiWriter(file) //file, os.Stdout
+	multiWriterErr := io.MultiWriter(file) //file, os.Stderr
 	l := &Logger{
 		LInfo:		log.New(multiWriter, "INFO: ", log.Ldate|log.Ltime),
-		LWarning:	log.New(os.Stdout, "WARNING: ", log.Ldate|log.Ltime),
-		LError:		log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime),
+		LWarning:	log.New(multiWriter, "WARNING: ", log.Ldate|log.Ltime),
+		LError:		log.New(multiWriterErr, "ERROR: ", log.Ldate|log.Ltime),
 	}
 	return l
 }

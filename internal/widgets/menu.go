@@ -95,7 +95,12 @@ var (
 	LogAutoScrollMenu = Item{
 		Name:		"log_autoscroll",
 		Icon:		"a",
-		Description: "Log Autoscroll",
+		Description: "Autoscroll",
+	}
+	DefinitionMenu = Item{
+		Name:		"job_definition",
+		Icon:		"d",
+		Description: "Definition",
 	}
 )
 
@@ -184,8 +189,12 @@ func (m *Menu) RenderGlobalMenus() {
 	m.Grid1.DrawMapView()
 }
 
-func (m *Menu) RenderMenu(menus []Item) {
-	var allMenus = append(DefaultMenus, menus...)
+func (m *Menu) RenderMenu(menus []Item, addDefaults bool) {
+	var allMenus = make([]Item, 0)
+	if addDefaults {
+		allMenus = append(allMenus, DefaultMenus...)
+	}
+	allMenus = append(allMenus, menus...)
 	for _, menu :=  range allMenus {
 		m.Add(menu, false)
 	}
@@ -208,6 +217,11 @@ func (m *Menu) RemoveMenus(menus []Item) {
 }
 
 func (m *Menu) Replace(item1 Item, item2 Item) {
-	m.Add(item2, false)
-	m.Remove(item1)
+	for i, menu := range m.Items {
+		if menu.Name == item1.Name {
+			m.Items[i] = item2
+			m.Render()
+			break
+		}
+	}
 }

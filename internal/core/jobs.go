@@ -30,12 +30,13 @@ func NewJobs(app *App) *Jobs {
 }
 
 func (j *Jobs) OnFocus() {
-	j.App.Layout.Header.Menu.RenderMenu(j.Menus)
+	j.App.Layout.Header.Menu.RenderMenu(j.Menus, true)
 	go j.Listener.Listen()
 }
 
 func (j *Jobs) OnBlur() {
 	j.App.Layout.Header.Menu.RemoveMenus(j.Menus)
+	j.App.Layout.Header.Menu.Remove(widgets.StartJobMenu)
 	go j.Listener.Stop()
 }
 
@@ -74,8 +75,11 @@ func (j *Jobs) UpdateTable()  {
 		// j.UpdateMenu()
 		Data, _ := j.App.NomadClient.Jobs(Params)
 		j.UpdateTableData(Params, Data)
+		j.OnSelectionChanged(1, 0)
 	} else {
-		fmt.Println("No config values found")
+		msg := "No valid Region/Namespace found..."
+		j.App.Logger.Error(msg)
+		j.App.Alert.Error(msg)
 	}
 }
 
@@ -104,11 +108,13 @@ func (j *Jobs) HandleStopModalResponse(index int, label string) {
 		j.App.Alert.Loader(true)
 		if err := j.App.NomadClient.Deregister(j.SelectedValue["name"], false, params); err != nil {
 			j.App.Alert.Loader(false)
-			j.App.Alert.Error(err.Error())
+			j.App.Alert.Error("Job stop request failed...")
+			j.App.Logger.Errorf("Job stop request failed: %s", err.Error())
 		} else {
 			j.App.Alert.Loader(false)
 		    msg := fmt.Sprintf("Job %s stopped successfully...", j.SelectedValue["name"])
 		    j.App.Alert.Info(msg)
+			j.App.Logger.Info(msg)
 		}
 	}
 	j.App.Layout.GoBack()
@@ -121,11 +127,11 @@ func (j *Jobs) StartModal() {
 	confirmModal.SetTitle(title)
 	confirmModal.SetData(j.SelectedValue)
 	confirmModal.AddButtons([]string{"Cancel", "Start"})
-	confirmModal.SetResponseFunc(j.HandleStartpModalResponse)
+	confirmModal.SetResponseFunc(j.HandleStartModalResponse)
 	j.App.Layout.OpenPage("modal", true)
 }
 
-func (j *Jobs) HandleStartpModalResponse(index int, label string) {
+func (j *Jobs) HandleStartModalResponse(index int, label string) {
 	if index == 1 && label == "Start" {
 		params := &models.NomadParams{
 			Region:		j.App.Config.GetRegion(),
@@ -134,12 +140,19 @@ func (j *Jobs) HandleStartpModalResponse(index int, label string) {
 		j.App.Alert.Loader(true)
 		if err := j.App.NomadClient.Register(j.SelectedValue["name"], params); err != nil {
 			j.App.Alert.Loader(false)
-			j.App.Alert.Error(err.Error())
+			j.App.Alert.Error("Job start request failed...")
+			j.App.Logger.Errorf("Job start request failed:: %s", err.Error())
 		} else {
 			j.App.Alert.Loader(false)
 		    msg := fmt.Sprintf("Job %s started successfully...", j.SelectedValue["name"])
 		    j.App.Alert.Info(msg)
+			j.App.Logger.Info(msg)
 		}
 	}
 	j.App.Layout.GoBack()
+}
+
+func (j *Jobs) GoToDefinitions() {
+	j.SelectedValue = j.GetSelectedItem()
+	j.App.Layout.OpenPage(j.App.Primitives.JobDefinition.GetTitle(), true)
 }
