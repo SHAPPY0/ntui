@@ -6,7 +6,6 @@ import (
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/models"
 	"github.com/shappy0/ntui/internal/utils"
-	// "github.com/shappy0/ntui/internal/widgets"
 )
 
 type Allocations struct {

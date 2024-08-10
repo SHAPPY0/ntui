@@ -78,6 +78,11 @@ func (l *Log) UpdateMenu() {
 	
 }
 
+func (l *Log) SetLog(data []byte) {
+	l.Render(data)
+	l.App.Layout.Draw()
+}
+
 func (l *Log) OnFocus() {
 	l.SelectedAlloc = l.App.Primitives.Tasks.SelectedValue
 	if *l.PageSource == l.App.Primitives.Allocations.GetTitle() {
@@ -94,6 +99,7 @@ func (l *Log) FetchLog() {
 	l.App.Alert.Loader(true)
 	l.ClearLogs()
 	l.App.Logger.Infof("Fetching log for taskname: %s", l.SelectedAlloc.TaskName)
+	// l.SetLog([]byte("Fetching logs ..."))
 	LogChan, ErrChan := l.App.NomadClient.Logs(
 		l.SelectedAlloc.ID,
 		l.SelectedAlloc.TaskName,
@@ -117,14 +123,18 @@ func (l *Log) StartLogStream(logChan <-chan *api.StreamFrame, errChan <-chan err
 			if log == nil {
 				return
 			}
-			l.Render(log.Data)
-			l.App.Layout.Draw()
+			l.SetLog(log.Data)
+			// l.Render(log.Data)
+			// l.App.Layout.Draw()
 		case _ = <-l.StopLogChan:
 			// l.ClearLogs()
 			return
 		case err := <-errChan:
 			l.App.Logger.Errorf("Error getting log: %s", err.Error())
 			l.App.Alert.Error(err.Error())
+			l.SetLog([]byte("[orange]No logs available..."))
+			// l.Render([]byte("[orange]No logs available..."))
+			// l.App.Layout.Draw()
 			return
 		}
 	}

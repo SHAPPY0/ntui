@@ -77,12 +77,13 @@ func DateTimeDiff(dateTime time.Time) string {
 		h := fmt.Sprintf("%sh", fmt.Sprint(hours))
 		strBuilder.WriteString(h)
 	}
-	m := fmt.Sprintf("%sm", fmt.Sprint(minutes))
-	if minutes < 9 {
-		m = fmt.Sprintf("0%sm", fmt.Sprint(minutes))
+	if minutes > 0 {
+		m := fmt.Sprintf("%sm", fmt.Sprint(minutes))
+		if minutes < 9 {
+			m = fmt.Sprintf("0%sm", fmt.Sprint(minutes))
+		}
+		strBuilder.WriteString(m)
 	}
-	strBuilder.WriteString(m)
-	
 	s := fmt.Sprintf("%ss", fmt.Sprint(math.Floor(seconds)))
 	if seconds < 9 {
 		s = fmt.Sprintf("0%ss", fmt.Sprint(math.Floor(seconds)))
@@ -95,7 +96,7 @@ func FormatMemoryUsage(value int) int {
 	if value == 0 {
 		return value
 	}
-	return value / 1024 / 1024
+	return (value / 1024) / 1024
 }
 
 func SafeDeref[T any](p *T) T {

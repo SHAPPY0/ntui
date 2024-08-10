@@ -17,14 +17,19 @@ var (
 		KeyLabel:		"Ctrl + c",
 		KeyDescription: "Control and c",
 	}
+	NtuiEnterKey = NtuiKey{
+		Key: 			tcell.KeyEnter,
+		KeyLabel:		"enter",
+		KeyDescription:	"Enter Key",
+	}
 	NtuiEscKey = NtuiKey{
 		Key:			tcell.KeyEsc,
-		KeyLabel:		"Backspace",
-		KeyDescription: "Backspace",
+		KeyLabel:		"Esc",
+		KeyDescription: "Esc key",
 	}
 	NtuiTabKey = NtuiKey{
 		Key:			tcell.KeyTAB,
-		KeyLabel:		"Tab Key",
+		KeyLabel:		"Tab",
 		KeyDescription: "Tab Key",
 	}
 	NtuiCtrlRKey = NtuiKey{
@@ -56,6 +61,16 @@ var (
 		Key:			tcell.KeyCtrlS,
 		KeyLabel:		"ctrl + s",
 		KeyDescription: "Control and S",
+	}
+	NtuiCtrlJKey = NtuiKey{
+		Key:			tcell.KeyCtrlJ,
+		KeyLabel:		"ctrl + j",
+		KeyDescription: "Control and J",
+	}
+	NtuiCtrlDKey = NtuiKey{
+		Key:			tcell.KeyCtrlD,
+		KeyLabel:		"ctrl + d",
+		KeyDescription: "Control and D",
 	}
 )
 

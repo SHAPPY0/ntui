@@ -9,7 +9,7 @@ var (
 	DefaultConfigDir = "." + AppName
 	DefaultConfigFile = "config.toml"
 	userHomeDir, _ = os.UserHomeDir()
-	DefaultRefreshRate = 5
+	DefaultRefreshRate = 3
 	DefaultLogLevel = "info"
 	DefaultConfigPath = userHomeDir + "/" + DefaultConfigDir + "/" + DefaultConfigFile
 	DefaultRegion = ""

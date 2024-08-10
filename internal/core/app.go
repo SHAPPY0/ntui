@@ -30,7 +30,9 @@ type PrimitivesX struct {
 	VersionDiff 	*VersionDiff
 	Nodes 			*Nodes
 	Modal 			*Modal
+	CustomModal			*CustomModal
 	JobDefinition	*JobDefinition
+	RunJob			*RunJob
 }
 
 func NewApp(version string, config *Config, logger *utils.Logger) (*App, error) {
@@ -63,7 +65,9 @@ func (app *App) Init() error {
 		VersionDiff:	NewVersionDiff(app),
 		Nodes:			NewNodes(app),
 		Modal:			NewModal(app),
+		CustomModal:	NewCustomModal(app),
 		JobDefinition:	NewJobDefinition(app),
+		RunJob:			NewRunJob(app),
 	}
 	app.Primitives.Main  = NewMain(app)
 	BindAppKeys(app)
@@ -102,13 +106,29 @@ func BindAppKeys(app *App) {
 				app.Primitives.Jobs.StartModal()
 			}
 			break
+		// case utils.NtuiCtrlJKey.Key:
+		// 	if app.Layout.GetActivePage() == app.Primitives.Jobs.GetTitle() {
+		// 		app.Layout.OpenPage(app.Primitives.RunJob.GetTitle(), true)
+		// 	}
+		// 	break
+		case utils.NtuiCtrlDKey.Key:
+			if app.Layout.GetActivePage() == app.Primitives.Jobs.GetTitle() {
+				app.Layout.Body.OpenPage1("help", true)
+			}
+			break
 		case utils.NtuiRuneKey.Key:
+			if app.Layout.GetActivePage() == app.Primitives.RunJob.GetTitle() {
+				break
+			}
 			switch event.Rune() {
 			case '1':
 				app.Layout.OpenPage(app.Primitives.Nodes.GetTitle(), true)
 				break
 			case '2':
 				app.Layout.OpenPage(app.Primitives.Main.GetTitle(), false)
+				break
+			case '3':
+				app.Layout.OpenPage(app.Primitives.RunJob.GetTitle(), true)
 				break
 			case 'v':
 				if app.Layout.GetActivePage() == app.Primitives.TaskGroups.GetTitle() {
@@ -162,4 +182,11 @@ func (app *App) RunX() error {
 
 func (app *App) StopX() {
 	app.Layout.Stop()
+}
+
+func (app *App) OpenModal(data string, handlerFn func(*tcell.EventKey) *tcell.EventKey) {
+	modal := app.Primitives.CustomModal
+	modal.SetData(data)
+	modal.SetInputHandler(handlerFn)
+	app.Layout.Body.OpenPageX(modal.GetPageTitle(), false)
 }

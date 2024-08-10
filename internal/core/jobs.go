@@ -30,7 +30,7 @@ func NewJobs(app *App) *Jobs {
 }
 
 func (j *Jobs) OnFocus() {
-	j.App.Layout.Header.Menu.RenderMenu(j.Menus, true)
+	// j.App.Layout.Header.Menu.RenderMenu(j.Menus, true)
 	go j.Listener.Listen()
 }
 
@@ -62,9 +62,9 @@ func (j *Jobs) OnSelectionChanged(row, col int) {
 	}
 }
 
-func (j *Jobs) UpdateMenu() {
-	j.App.Layout.Header.Menu.Add(widgets.RegionNMenu, true)
-}
+// func (j *Jobs) UpdateMenu() {
+// 	j.App.Layout.Header.Menu.Add(widgets.ContextMenu, true)
+// }
 
 func (j *Jobs) UpdateTable()  {
 	if j.App.Config.GetRegion() != "" && j.App.Config.GetNamespace() != "" {
@@ -74,6 +74,9 @@ func (j *Jobs) UpdateTable()  {
 		}
 		// j.UpdateMenu()
 		Data, _ := j.App.NomadClient.Jobs(Params)
+		// if len(Data) == 0 {
+		// 	j.App.Layout.Header.Menu.RemoveMenus(j.Menus)
+		// }
 		j.UpdateTableData(Params, Data)
 		j.OnSelectionChanged(1, 0)
 	} else {
@@ -138,15 +141,21 @@ func (j *Jobs) HandleStartModalResponse(index int, label string) {
 			Namespace:	j.App.Config.GetNamespace(),
 		}
 		j.App.Alert.Loader(true)
-		if err := j.App.NomadClient.Register(j.SelectedValue["name"], params); err != nil {
-			j.App.Alert.Loader(false)
-			j.App.Alert.Error("Job start request failed...")
-			j.App.Logger.Errorf("Job start request failed:: %s", err.Error())
+		jobId := j.SelectedValue["name"]
+		job, err := j.App.NomadClient.GetJob(jobId)
+		if err != nil {
+			j.App.Logger.Error("Error getting job " + jobId + " info to start job: " + err.Error())
 		} else {
-			j.App.Alert.Loader(false)
-		    msg := fmt.Sprintf("Job %s started successfully...", j.SelectedValue["name"])
-		    j.App.Alert.Info(msg)
-			j.App.Logger.Info(msg)
+			if err := j.App.NomadClient.Register(job, params); err != nil {
+				j.App.Alert.Loader(false)
+				j.App.Alert.Error("Job start request failed...")
+				j.App.Logger.Errorf("Job start request failed:: %s", err.Error())
+			} else {
+				j.App.Alert.Loader(false)
+				msg := fmt.Sprintf("Job %s started successfully...", jobId)
+				j.App.Alert.Info(msg)
+				j.App.Logger.Info(msg)
+			}
 		}
 	}
 	j.App.Layout.GoBack()

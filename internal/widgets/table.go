@@ -76,10 +76,24 @@ func (t *Table) DrawHeader() {
 	}
 }
 
+func (t *Table) DrawHeaderLeft() {
+	for I := 0; I < len(t.Headers); I++ {
+		Header := fmt.Sprintf("[::b]%s", strings.ToUpper(t.Headers[I]))
+		t.SetCell(0, I, 
+			tview.NewTableCell(Header).
+				SetExpansion(1).
+				SetBackgroundColor(tcell.ColorGray).
+				SetTextColor(tcell.ColorWhite).
+				SetAlign(tview.AlignLeft).
+				SetSelectable(false))
+	}
+}
+
 func (t *Table) DrawCell(row, col int, value string, rowColor tcell.Color) {
 	NewCell := tview.NewTableCell(value).
 				SetExpansion(1).
-				SetAlign(tview.AlignCenter)
+				SetAlign(tview.AlignCenter).
+				SetMaxWidth(100)
 	NewCell.SetTextColor(rowColor)
 	t.SetCell(row, col, NewCell)
 }
@@ -87,7 +101,8 @@ func (t *Table) DrawCell(row, col int, value string, rowColor tcell.Color) {
 func (t *Table) DrawLeftCell(row, col int, value string, rowColor tcell.Color) {
 	NewCell := tview.NewTableCell(value).
 				SetExpansion(1).
-				SetAlign(tview.AlignLeft)
+				SetAlign(tview.AlignLeft).
+				SetMaxWidth(100)
 	NewCell.SetTextColor(rowColor)
 	t.SetCell(row, col, NewCell)
 }

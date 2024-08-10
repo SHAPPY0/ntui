@@ -42,10 +42,15 @@ var (
 		Icon:		"esc",
 		Description: "Go Back",
 	}
-	RegionNMenu = Item{
+	ContextMenu = Item{
 		Name:		"region_namespace",
 		Icon:		"2",
-		Description: "Region/Namespace",
+		Description: "Context",
+	}
+	CreateJobNMenu = Item{
+		Name:		"create_new_jb",
+		Icon:		"3",
+		Description: "Create New Job",
 	}
 	LogMenu = Item{
 		Name:		"log",
@@ -102,18 +107,24 @@ var (
 		Icon:		"d",
 		Description: "Definition",
 	}
+	RunJobMenu = Item{
+		Name:		"run_job",
+		Icon:		"ctrl+j",
+		Description: "Run Job",
+	}
 )
 
 var DefaultMenus = []Item{
+	EscMenu,
 	UpArrowMenu,
 	DownArrowMenu,
 	EnterMenu,
-	EscMenu,
 }
 
 var DefaultGlobalMenus = []Item{
 	NodeMenu,
-	RegionNMenu,
+	ContextMenu,
+	CreateJobNMenu,
 }
 
 func NewMenu() *Menu {

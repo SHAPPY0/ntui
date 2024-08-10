@@ -19,6 +19,7 @@ type JobClient interface {
 	Revert(string, uint64, *uint64, *api.WriteOptions, string, string) (*api.JobRegisterResponse, *api.WriteMeta, error)
 	Deregister(string, bool, *api.WriteOptions) (string, *api.WriteMeta, error)
 	Register(*api.Job, *api.WriteOptions) (*api.JobRegisterResponse, *api.WriteMeta, error)
+	ParseHCL(string, bool) (*api.Job, error)
 }
 
 //Get jobs list
@@ -176,22 +177,37 @@ func (n *Nomad) GetJob(jobId string) (*api.Job, error) {
 }
 
 //Register Job
-func (n *Nomad) Register(jobId string, params *models.NomadParams) error {
-	if jobId == "" {
-		n.Logger.Error("Invalid jobId to start job")
-		return fmt.Errorf("Invalid jobId to start job")
+func (n *Nomad) Register(job *api.Job, params *models.NomadParams) error {
+	if job == nil {
+		n.Logger.Error("Invalid job to start")
+		return fmt.Errorf("Invalid job to start")
 	}
-	job, err := n.GetJob(jobId)
-	if err != nil {
-		n.Logger.Error("Error getting job " + jobId + " info to start job: " + err.Error())
-		return err
-	}
-	n.Logger.Info(utils.Stringify(&api.Job{Name: &jobId, Region: &params.Region, Namespace: &params.Namespace}))
+	// job, err := n.GetJob(jobId)
+	// if err != nil {
+	// 	n.Logger.Error("Error getting job " + jobId + " info to start job: " + err.Error())
+	// 	return err
+	// }
+	jobId := job.Name
+	n.Logger.Info(utils.Stringify(&api.Job{Name: jobId, Region: &params.Region, Namespace: &params.Namespace}))
 	resp, _, err := n.JobClient.Register(job, nil)
 	if err != nil {
-		n.Logger.Error("Job " + jobId + "start failed: " + err.Error())
+		n.Logger.Error("Job " + *jobId + "start failed: " + err.Error())
 		return err
 	}
-	n.Logger.Info("Job " + jobId + " started successfully: " + utils.Stringify(resp))
+	n.Logger.Info("Job " + *jobId + " started successfully: " + utils.Stringify(resp))
 	return nil
+}
+
+//DryRun Job HCL
+func (n *Nomad) DryRun(jobHcl string) (*api.Job, error) {
+	if jobHcl == "" {
+		n.Logger.Error("Invalid job HCL")
+		return nil, fmt.Errorf("Invalid job HCL")
+	}
+	job, err := n.JobClient.ParseHCL(jobHcl, true)
+	if err != nil {
+		n.Logger.Error("Error parsing job HCL: " + err.Error())
+		return nil, err
+	}
+	return job, nil
 }

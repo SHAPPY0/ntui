@@ -1,6 +1,7 @@
 package widgets
 
 import (
+	// "fmt"
 	"github.com/rivo/tview"
 )
 
@@ -43,6 +44,10 @@ func (p *Pages) OpenPageX(name string, addHistory bool) {
 	}
 	p.SwitchToPage(name)
 	p.ActivePage = name
+}
+
+func (p *Pages) OpenPage1(name string, addHistory bool) {
+	p.ShowPage(name)
 }
 
 func (p *Pages) ShowPageX(name string) {

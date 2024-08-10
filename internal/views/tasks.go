@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	TitleTasks = "tasks"
+	TitleTasks = "task"
 	TitleEvents = "events"
-	TaskLeftInfoKeys = []string{"Status", "JobId", "Namespace", "Client", "Modified At", "Started At", "Driver"}
-	TaskLeftInfoValues = []string{"", "", "", "", "", "", ""}
-	TaskRightInfoKeys = []string{"Name", "Version", "Image", "Volumes", "LifeCycle"}
-	TaskRightInfoValues = []string{"", "", "", "", ""}
+	TaskLeftInfoKeys = []string{"Name", "Status", "JobId", "Client", "Modified At", "Started At"}
+	TaskLeftInfoValues = []string{"", "", "", "", "", ""}
+	TaskRightInfoKeys = []string{"Namespace", "Version", "Driver", "Image", "Volumes", "LifeCycle"}
+	TaskRightInfoValues = []string{"", "", "", "", "", ""}
 )
 
 type Tasks struct {
@@ -22,10 +22,11 @@ type Tasks struct {
 	Title 			string
 	DetailsView 	*widgets.Flex
 	InfoView 		*widgets.Flex
-	UsageView 		*tview.TextView
+	UsageView 		*widgets.Flex
 	EventsTable		*widgets.Table
 	Menus 			[]widgets.Item
 	RemoveMenus		[]widgets.Item
+	Data			models.Allocations
 }
 
 var TaskMenus = []widgets.Item{
@@ -47,6 +48,7 @@ func NewTasks() *Tasks {
 		EventsTable: 	widgets.NewTable(TitleEvents),
 		Menus:			TaskMenus,
 		RemoveMenus:	RemoveTaskMenus,
+		Data:			models.Allocations{},
 	}
 	t.SetTitleX(t.Title, "")
 	return t
@@ -57,7 +59,9 @@ func (t *Tasks) GetTitle() string {
 }
 
 func (t *Tasks) DrawView(data models.Allocations) {
+	t.Data = data
 	GetTaskData(data)
+	t.SetDirection(tview.FlexRow)
 	TgTitleName := data.Tasks.Name + "/" + utils.GetID(data.ID)
 	t.SetTitleX(t.Title, TgTitleName)
 	
@@ -69,46 +73,48 @@ func (t *Tasks) DrawView(data models.Allocations) {
 }
 
 func GetTaskData(data models.Allocations) {
-	TaskLeftInfoValues[0] = utils.ToCapitalize(data.Status)
-	TaskLeftInfoValues[1] = utils.ToCapitalize(data.JobID)
-	TaskLeftInfoValues[2] = utils.ToCapitalize(data.Namespace)
+	TaskLeftInfoValues[0] = utils.ToCapitalize(data.Name)
+	TaskLeftInfoValues[1] = utils.ToCapitalize(data.Status)
+	TaskLeftInfoValues[2] = utils.ToCapitalize(data.JobID)
 	TaskLeftInfoValues[3] = utils.GetID(data.Client)
 	TaskLeftInfoValues[4] = utils.DateTimeToStr(data.Modified)
-	TaskLeftInfoValues[6] = utils.ToCapitalize(data.Tasks.Driver)
 	for _, event := range data.Events{
 		if event.Type == "Started" {
 			TaskLeftInfoValues[5] = utils.DateTimeToStr(event.Time)
 			break
 		}
 	}
-	TaskRightInfoValues[0] = utils.ToCapitalize(data.Name)
+	TaskRightInfoValues[0] = utils.ToCapitalize(data.Namespace)
 	TaskRightInfoValues[1] = utils.IntToStr(data.Version)
-	TaskRightInfoValues[2] = data.Tasks.Config["image"].(string)
+	TaskRightInfoValues[2] = utils.ToCapitalize(data.Tasks.Driver)
+	TaskRightInfoValues[3] = data.Tasks.Config["image"].(string)
 	Volumn, Ok := data.Tasks.Config["volumes"]
 	if Ok && len(Volumn.([]interface{})) > 0 {
-		TaskRightInfoValues[3] = Volumn.([]interface{})[0].(string)
+		TaskRightInfoValues[4] = Volumn.([]interface{})[0].(string)
 	}
-	TaskRightInfoValues[4] = utils.ToCapitalize("Main")
+	TaskRightInfoValues[5] = utils.ToCapitalize("Main")
 }
 
 func (t *Tasks) TaskDetails(task models.Tasks) {
 	t.DetailsView.SetBorder(false)
-	t.DetailsView.SetDirection(tview.FlexRow)
 	t.SetInfoView()
-	t.SetUsageView()
+
+	resourceUsage := task.Resources
+	t.DrawUsageGauges()
+	t.SetUsageData(resourceUsage)
 }
 
 func (t *Tasks) SetInfoView() {
-	//Top Section
+	//Top Left Section
 	t.InfoView = widgets.NewFlex()
 	t.InfoView.SetBorder(false)
-	//Top Left
+	//Top Left Left
 	InfoLeftTable := widgets.NewMapView()
 	InfoLeftTable.SetMapKeys(TaskLeftInfoKeys)
 	InfoLeftTable.SetMapValues(TaskLeftInfoValues)
 	InfoLeftTable.DrawMapView()
 
-	//Top Right
+	//Top Left Right
 	InfoRightTable := widgets.NewMapView()
 	InfoRightTable.SetMapKeys(TaskRightInfoKeys)
 	InfoRightTable.SetMapValues(TaskRightInfoValues)
@@ -120,18 +126,38 @@ func (t *Tasks) SetInfoView() {
 	t.DetailsView.AddItemX(t.InfoView, 0, 1, false)
 }
 
-func (t *Tasks) SetUsageView() {
-	//Bottom Section
-	t.UsageView = tview.NewTextView()
-	t.UsageView.SetText("")
+func (t *Tasks) DrawUsageGauges() {
+	//Top Right Section
+	t.UsageView = widgets.NewFlex()
+	t.UsageView.SetBorder(false)
+	t.UsageView.SetDirection(tview.FlexRow)
+	
+	//CPU Usage Guage
+	cpu_gauge := widgets.NewUtilGauge("CPU:   ")
+	t.UsageView.AddItemX(cpu_gauge,  0, 1, false)
+
+	//Memory Usage Guage
+	memory_gauge := widgets.NewUtilGauge("Memory:")
+	t.UsageView.AddItemX(memory_gauge,  0, 1, false)
+
 	t.DetailsView.AddItemX(t.UsageView, 0, 1, false)
+}
+
+func (t *Tasks) SetUsageData(usage models.TaskResource) {
+	//CPU Usage Guage
+	cpu_gauge := widgets.PrimitiveToGauge(t.UsageView.GetItem(0))
+
+	cpu_gauge.SetValue(usage.CPUPercent)
+	//Memory Usage Guage
+	memory_gauge := widgets.PrimitiveToGauge(t.UsageView.GetItem(1))
+	memory_gauge.SetValue(usage.MemoryPercent)
 }
 
 func (t *Tasks) EventsView(events []models.Events) {
 	t.EventsTable.Headers = []string{"time", "type", "description"}
 	t.EventsTable.SetBorder(false)
 	t.EventsTable.ClearTable()
-	t.EventsTable.DrawHeader()
+	t.EventsTable.DrawHeaderLeft()
 	t.UpdateEventTable(events)
 }
 
@@ -140,8 +166,8 @@ func (t *Tasks) UpdateEventTable(events []models.Events) {
 	t.EventsTable.SetSelectable(false, false)
 	RowTextColor := tcell.ColorWhite
 	for I := 0; I < len(events); I++ {
-		t.EventsTable.DrawCell(I + 1, 0, utils.DateTimeDiff(events[I].Time), RowTextColor)
-		t.EventsTable.DrawCell(I + 1, 1, events[I].Type, RowTextColor)
-		t.EventsTable.DrawCell(I + 1, 2, events[I].DisplayMessage, RowTextColor)
+		t.EventsTable.DrawLeftCell(I + 1, 0, utils.DateTimeDiff(events[I].Time), RowTextColor)
+		t.EventsTable.DrawLeftCell(I + 1, 1, events[I].Type, RowTextColor)
+		t.EventsTable.DrawLeftCell(I + 1, 2, events[I].DisplayMessage, RowTextColor)
 	}
 }

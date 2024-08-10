@@ -27,6 +27,7 @@ func NewLog() *Log {
 		Title:			TitleLog,
 		Menus:			LogMenu,
 	}
+	l.LogView.SetDynamicColors(true)
 	l.Container.AddItemX(l.LogView, 0, 1, true)
 	return l
 }

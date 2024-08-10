@@ -3,7 +3,6 @@ package core
 import (
 	"github.com/shappy0/ntui/internal/views"
 	"github.com/shappy0/ntui/internal/utils"
-	// "github.com/shappy0/ntui/internal/widgets"
 )
 
 type TaskGroups struct {

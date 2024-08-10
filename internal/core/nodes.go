@@ -54,7 +54,9 @@ func (n *Nodes) UpdateTable() {
 	}
 	nodes, err := n.App.NomadClient.NodeList(Params)
 	if err != nil {
-		n.App.Logger.Error("Error while getting Node List: " + err.Error())
+		err_msg := "Error while getting Node List: " + err.Error()
+		n.App.Logger.Error(err_msg)
+		n.App.Alert.Error(err_msg)
 	}
 	n.UpdateTableData(nodes)
 }

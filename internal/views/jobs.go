@@ -19,6 +19,7 @@ type Jobs struct {
 var JobsMenu = []widgets.Item{
 	widgets.StopJobMenu,
 	widgets.DefinitionMenu,
+	widgets.RunJobMenu,
 }  
 
 func NewJobs() *Jobs {

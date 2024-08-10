@@ -96,10 +96,12 @@ type TaskConfig struct {
 type TaskResource struct {
 	CPU 			int
 	CPUUsage		int
+	CPUPercent		float64
 	Cores			int
 	MemoryMB		int
 	MemoryUsage		int
 	MemoryMaxMB		int
+	MemoryPercent	float64
 	DiskMB			int
 }
 

@@ -6,6 +6,7 @@ import (
 	"sort"
 	"github.com/hashicorp/nomad/api"
 	"github.com/shappy0/ntui/internal/models"
+	"github.com/shappy0/ntui/internal/utils"
 )
 
 type AllocationClient interface {
@@ -86,7 +87,9 @@ func (n *Nomad) AllocationTask(params *models.NomadParams, allocationId string) 
 		}
 		Stats, _ := n.AllocationStats(params, Data)
 		t.Resources.CPUUsage = int(Stats.Cpu.TotalTicks)
+		t.Resources.CPUPercent = float64(Stats.Cpu.Percent)
 		t.Resources.MemoryUsage = int(Stats.Memory.RSS)
+		t.Resources.MemoryPercent = ((float64(utils.FormatMemoryUsage(t.Resources.MemoryUsage)) / float64(t.Resources.MemoryMB)) * 100)
 		Result = append(Result, t)
 	}
 	return Result, nil
